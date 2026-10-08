@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a reproducible problem using fictional data.
+title: "[Bug] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: "Do not include credentials, session tokens, real student details or user-data backups. Report security vulnerabilities privately."
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Plugin, Moodle, PHP, database, theme, browser, role and activity mode.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Use fictional participants and describe the journey state.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and sanitized evidence
+    validations:
+      required: true

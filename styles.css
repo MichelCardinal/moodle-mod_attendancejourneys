@@ -1,0 +1,1813 @@
+.attendancejourneys-course-card {
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #0f6cbf;
+    border-radius: .5rem;
+    background: #fff;
+    padding: 1.25rem 1.5rem;
+}
+
+.attendancejourneys-home-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: center;
+    border: 1px solid #d7dfe7;
+    border-left: .35rem solid #0f6cbf;
+    border-radius: .625rem;
+    background: linear-gradient(135deg, #fff 0%, #f4f8fc 100%);
+    box-shadow: 0 .125rem .35rem rgba(29, 33, 37, .06);
+    padding: 1.5rem 1.75rem;
+}
+
+.attendancejourneys-home-eyebrow,
+.attendancejourneys-home-policy-label {
+    display: block;
+    color: #5b6670;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.attendancejourneys-home-title {
+    margin: .25rem 0;
+    color: #1d2125;
+    font-size: 1.55rem;
+    font-weight: 650;
+}
+
+.attendancejourneys-home-shortname {
+    color: #5b6670;
+}
+
+.attendancejourneys-home-policy {
+    flex: 0 0 auto;
+    min-width: 10rem;
+    border-left: 1px solid #d7dfe7;
+    padding-left: 1.5rem;
+}
+
+.attendancejourneys-home-policy-value {
+    display: block;
+    margin-top: .25rem;
+    color: #0f6cbf;
+    font-size: 1.15rem;
+}
+
+.attendancejourneys-home-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: .75rem;
+    margin: 1rem 0 1.5rem;
+}
+
+.attendancejourneys-home-metric {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    padding: .9rem 1rem;
+}
+
+.attendancejourneys-home-metric strong,
+.attendancejourneys-home-metric span {
+    display: block;
+}
+
+.attendancejourneys-home-metric strong {
+    color: #1d2125;
+    font-size: 1.65rem;
+    line-height: 1.1;
+}
+
+.attendancejourneys-home-metric span {
+    margin-top: .3rem;
+    color: #5b6670;
+    font-size: .8rem;
+}
+
+.attendancejourneys-home-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(14rem, 18rem);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.attendancejourneys-home-main,
+.attendancejourneys-home-aside {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.attendancejourneys-home-section,
+.attendancejourneys-home-action-card,
+.attendancejourneys-home-progress-card {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-home-clear {
+    border-radius: .375rem;
+    background: #f1f8f3;
+    color: #245b2b;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-home-attention-item,
+.attendancejourneys-home-session-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: .85rem 0;
+}
+
+.attendancejourneys-home-attention-item + .attendancejourneys-home-attention-item,
+.attendancejourneys-home-session-row + .attendancejourneys-home-session-row {
+    border-top: 1px solid #e6e9ec;
+}
+
+.attendancejourneys-home-session-row {
+    grid-template-columns: 3rem minmax(0, 1fr) auto auto;
+}
+
+.attendancejourneys-home-date {
+    border-radius: .375rem;
+    background: #edf4fa;
+    color: #0f6cbf;
+    overflow: hidden;
+    text-align: center;
+}
+
+.attendancejourneys-home-date-day,
+.attendancejourneys-home-date-month {
+    display: block;
+}
+
+.attendancejourneys-home-date-day {
+    padding-top: .25rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.attendancejourneys-home-date-month {
+    padding: 0 .2rem .25rem;
+    font-size: .65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.attendancejourneys-home-actions .btn {
+    margin: 0 0 .5rem;
+    text-align: left;
+}
+
+.attendancejourneys-home-actions .btn:last-child {
+    margin-bottom: 0;
+}
+
+.attendancejourneys-navigation {
+    margin-bottom: 1.5rem;
+}
+
+.attendancejourneys-navigation .nav-tabs {
+    flex-wrap: wrap;
+}
+
+.attendancejourneys-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+.attendancejourneys-actions form {
+    margin: 0;
+}
+
+.attendancejourneys-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.attendancejourneys-table-scroll:focus-visible {
+    border-radius: .375rem;
+    outline: .1875rem solid #0f6cbf;
+    outline-offset: .125rem;
+}
+
+.attendancejourneys-table-scroll > table {
+    margin-bottom: 0;
+}
+
+.attendancejourneys-actions .btn:focus-visible,
+.attendancejourneys-navigation a:focus-visible,
+.attendancejourneys-status-choice input:focus-visible + span {
+    outline: .1875rem solid #0f6cbf;
+    outline-offset: .125rem;
+}
+
+.attendancejourneys-page :is(a, button, input, select, textarea):focus-visible,
+.attendancejourneys-self-page :is(a, button, input, select, textarea):focus-visible,
+.attendancejourneys-selfbulk-page :is(a, button, input, select, textarea):focus-visible,
+.attendancejourneys-admin-page :is(a, button, input, select, textarea):focus-visible {
+    outline: .1875rem solid #0f6cbf;
+    outline-offset: .125rem;
+}
+
+.attendancejourneys-stat {
+    height: 100%;
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    background: #fff;
+    padding: 1rem 1.25rem;
+}
+
+.attendancejourneys-stat-value {
+    display: block;
+    color: #1d2125;
+    font-size: 1.75rem;
+    line-height: 1.25;
+}
+
+.attendancejourneys-stat-text {
+    margin-top: .25rem;
+    font-size: 1.1rem;
+}
+
+.attendancejourneys-participants {
+    margin-top: 1rem;
+}
+
+.attendancejourneys-dashboard-grid {
+    display: grid;
+    grid-template-columns: minmax(16rem, 1fr) minmax(16rem, 1fr);
+    gap: 1rem;
+    margin-top: .5rem;
+}
+
+.attendancejourneys-dashboard-panel {
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    background: #fff;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-dashboard-sessions {
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.attendancejourneys-dashboard-session {
+    display: grid;
+    grid-template-columns: minmax(12rem, 1fr) auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: .85rem 1rem;
+    background: #fff;
+}
+
+.attendancejourneys-dashboard-session + .attendancejourneys-dashboard-session {
+    border-top: 1px solid #dee2e6;
+}
+
+.attendancejourneys-empty-state {
+    max-width: none;
+    border: 1px dashed #adb5bd;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    padding: 2rem;
+    text-align: center;
+}
+
+.attendancejourneys-sessions th a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.attendancejourneys-section-header {
+    margin-bottom: 1.25rem;
+}
+
+.attendancejourneys-section-header h2 {
+    margin: .2rem 0 .35rem;
+}
+
+.attendancejourneys-section-eyebrow {
+    color: #5b6670;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .055em;
+    text-transform: uppercase;
+}
+
+.attendancejourneys-session-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(8rem, 1fr));
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+}
+
+.attendancejourneys-workqueue-metrics {
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+}
+
+.attendancejourneys-sessions-page {
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-session-metric {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-session-metric strong,
+.attendancejourneys-session-metric span {
+    display: block;
+}
+
+.attendancejourneys-session-metric strong {
+    color: #1d2125;
+    font-size: 1.45rem;
+    line-height: 1.15;
+}
+
+.attendancejourneys-session-metric span {
+    margin-top: .25rem;
+    color: #5b6670;
+    font-size: .78rem;
+}
+
+.attendancejourneys-session-toolbar {
+    display: block;
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.attendancejourneys-session-toolbar-filters {
+    width: 100%;
+}
+
+.attendancejourneys-session-toolbar .attendancejourneys-group-filter {
+    margin-bottom: .75rem;
+}
+
+.attendancejourneys-session-toolbar .attendancejourneys-session-filters {
+    border: 0;
+    background: transparent;
+    padding: 0;
+}
+
+.attendancejourneys-session-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .5rem;
+    align-items: stretch;
+    border-top: 1px solid #dfe3e7;
+    margin-top: 1rem;
+    padding-top: 1rem;
+}
+
+.attendancejourneys-session-actions form,
+.attendancejourneys-session-actions .singlebutton {
+    margin: 0;
+    width: 100%;
+}
+
+.attendancejourneys-session-actions .btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 2.75rem;
+    height: 100%;
+    line-height: 1.25;
+    white-space: normal;
+}
+
+/* Moodle block regions can narrow the activity without narrowing the browser viewport. */
+/* stylelint-disable-next-line csstree/validator -- Valid size query; keep layout responsive to Moodle block regions. */
+@container (max-width: 46rem) {
+    .attendancejourneys-session-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attendancejourneys-empty-state {
+        max-width: none;
+    }
+}
+
+/* stylelint-disable-next-line csstree/validator -- Valid size query; keep layout responsive to Moodle block regions. */
+@container (max-width: 32rem) {
+    .attendancejourneys-session-actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+.attendancejourneys-sessions {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+.attendancejourneys-sessions th {
+    border-top: 0;
+    background: #f4f6f8;
+    color: #3f4850;
+    font-size: .75rem;
+    letter-spacing: .02em;
+}
+
+.attendancejourneys-sessions td {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    vertical-align: middle;
+}
+
+.attendancejourneys-session-title {
+    color: #1d2125;
+}
+
+.attendancejourneys-session-progress {
+    min-width: 7rem;
+}
+
+.attendancejourneys-form-card {
+    max-width: 58rem;
+    border: 1px solid #dfe3e7;
+    border-radius: .625rem;
+    background: #fff;
+    box-shadow: 0 .125rem .35rem rgba(29, 33, 37, .05);
+    padding: 1.25rem 1.5rem;
+}
+
+/* Session-series review: keep long previews readable in Moodle course layouts. */
+.attendancejourneys-series-review {
+    max-width: none;
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-series-review form > .form-group:first-of-type {
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #0f6cbf;
+    border-radius: .375rem;
+    background: #f5f9fc;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-series-review #fgroup_id_selectionbuttons .d-flex,
+.attendancejourneys-series-review #fgroup_id_selectionbuttons .form-group {
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.attendancejourneys-series-review #id_bulkactions {
+    margin: 1.25rem 0;
+    border: 1px solid #cbddea;
+    border-radius: .625rem;
+    background: #f5f9fc;
+    padding: 1rem 1.25rem .25rem;
+}
+
+.attendancejourneys-series-review #id_bulkactions > legend {
+    width: auto;
+    margin: 0 0 .75rem;
+    padding: 0 .35rem;
+    color: #263746;
+    font-size: 1rem;
+    font-weight: 700;
+}
+
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] {
+    margin: 1.25rem 0;
+    border: 1px solid #d7dfe7;
+    border-left: 4px solid #0f6cbf;
+    border-radius: .625rem;
+    background: #fff;
+    box-shadow: 0 .125rem .3rem rgba(29, 33, 37, .045);
+    padding: 1rem 1.25rem .35rem;
+}
+
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] > legend {
+    width: auto;
+    margin: 0 0 .75rem;
+    padding: 0 .4rem;
+    color: #1d2125;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] .form-group {
+    margin-bottom: .85rem;
+}
+
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] textarea,
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] input[type="text"],
+.attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] input[type="url"] {
+    max-width: 100%;
+    width: 100%;
+}
+
+.attendancejourneys-series-review .fdate_time_selector,
+.attendancejourneys-series-review .fdate_selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+}
+
+.attendancejourneys-series-review #fgroup_id_buttonar .d-flex,
+.attendancejourneys-series-review #fgroup_id_buttonar .form-group {
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.attendancejourneys-session-summary {
+    border: 1px solid #dee2e6;
+    border-left: 4px solid #0f6cbf;
+    border-radius: .5rem;
+    background: linear-gradient(135deg, #fff 0%, #f4f8fc 100%);
+    padding: 1.25rem 1.5rem;
+}
+
+.attendancejourneys-take-page {
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-session-summary-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem 1.25rem;
+    align-items: center;
+}
+
+.attendancejourneys-session-audit {
+    margin-top: .85rem;
+    border-top: 1px solid #d7dfe7;
+    padding-top: .75rem;
+    color: #495057;
+    font-size: .875rem;
+}
+
+.attendancejourneys-session-audit-empty {
+    color: #6a737b;
+}
+
+.attendancejourneys-take-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15rem, auto);
+    gap: 1rem;
+    align-items: center;
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.attendancejourneys-take-tools .attendancejourneys-participant-filters,
+.attendancejourneys-take-tools .attendancejourneys-bulk-actions {
+    margin: 0;
+}
+
+.attendancejourneys-take-tools .attendancejourneys-bulk-actions {
+    border-left: 1px solid #dfe3e7;
+    padding-left: 1rem;
+}
+
+.attendancejourneys-minutes {
+    width: 8rem;
+}
+
+.attendancejourneys-entry-progress {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: .55rem 1rem;
+    align-items: center;
+    border: 1px solid #d9dee3;
+    border-radius: .5rem;
+    background: #fff;
+    margin-bottom: 1rem;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-entry-progress-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .35rem 1rem;
+    grid-column: 1 / -1;
+}
+
+.attendancejourneys-entry-progress .progress-bar {
+    background: #0f6cbf;
+    transition: width .15s ease;
+}
+
+.attendancejourneys-entry-progress-track {
+    height: .45rem;
+    border-radius: 999px;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.attendancejourneys-entry-progress-state {
+    color: #495057;
+    font-size: .875rem;
+    white-space: nowrap;
+}
+
+.attendancejourneys-entry-progress.is-complete .progress-bar {
+    background: #198754;
+}
+
+.attendancejourneys-calculation {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-weight: 600;
+}
+
+.attendancejourneys-form-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.attendancejourneys-attendance-list {
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.attendancejourneys-attendance-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, .7fr) minmax(22rem, 1.7fr) minmax(12rem, .9fr) minmax(12rem, 1fr);
+    gap: 1rem;
+    align-items: start;
+    padding: 1rem;
+    background: #fff;
+}
+
+/* stylelint-disable-next-line csstree/validator -- Valid size query; keep layout responsive to Moodle block regions. */
+@container (max-width: 60rem) {
+    .attendancejourneys-take-tools {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-take-tools .attendancejourneys-bulk-actions {
+        border-top: 1px solid #dfe3e7;
+        border-left: 0;
+        padding-top: 1rem;
+        padding-left: 0;
+    }
+
+    .attendancejourneys-attendance-row {
+        grid-template-columns: minmax(8rem, .65fr) minmax(18rem, 1.5fr) minmax(12rem, 1fr);
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: 2 / -1;
+    }
+}
+
+/* stylelint-disable-next-line csstree/validator -- Valid size query; keep layout responsive to Moodle block regions. */
+@container (max-width: 44rem) {
+    .attendancejourneys-selfbulk-row {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-selfbulk-progress,
+    .attendancejourneys-selfbulk-callout {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .attendancejourneys-self-session-heading,
+    .attendancejourneys-self-calculation {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .attendancejourneys-self-session-facts {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-self-calculation-value {
+        text-align: left;
+    }
+
+    .attendancejourneys-attendance-row {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: auto;
+    }
+
+    .attendancejourneys-session-summary-meta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+.attendancejourneys-attendance-row + .attendancejourneys-attendance-row {
+    border-top: 1px solid #dee2e6;
+}
+
+.attendancejourneys-lastname,
+.attendancejourneys-firstname {
+    display: block;
+}
+
+.attendancejourneys-firstname {
+    color: #495057;
+}
+
+.attendancejourneys-record-source {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .3rem .5rem;
+    align-items: center;
+    margin-top: .55rem;
+}
+
+.attendancejourneys-source-badge {
+    display: inline-block;
+    border: 1px solid transparent;
+    border-radius: 50rem;
+    padding: .18rem .5rem;
+    font-size: .68rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.attendancejourneys-source-self {
+    border-color: #9fc6e2;
+    background: #eaf4fb;
+    color: #075985;
+}
+
+.attendancejourneys-source-staff {
+    border-color: #b8d6bf;
+    background: #edf7ef;
+    color: #245b2b;
+}
+
+.attendancejourneys-source-date {
+    color: #6a737b;
+    font-size: .7rem;
+}
+
+.attendancejourneys-field-label {
+    display: block;
+    margin-bottom: .4rem;
+    color: #495057;
+    font-size: .75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.attendancejourneys-minutes-slot {
+    min-height: 2.35rem;
+}
+
+.attendancejourneys-calculation-slot {
+    margin-top: .35rem;
+}
+
+.attendancejourneys-remarks-cell input {
+    width: 100%;
+}
+
+.attendancejourneys-report-table th a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.attendancejourneys-report-page,
+.attendancejourneys-individual-page,
+.attendancejourneys-admin-page,
+.attendancejourneys-self-page {
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-report-toolbar,
+.attendancejourneys-admin-filters {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.attendancejourneys-report-toolbar .attendancejourneys-group-filter {
+    margin-bottom: 0;
+}
+
+.attendancejourneys-report-table,
+.attendancejourneys-admin-table,
+.attendancejourneys-individual-table,
+.attendancejourneys-journey-history {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+.attendancejourneys-report-table th,
+.attendancejourneys-admin-table th,
+.attendancejourneys-individual-table th,
+.attendancejourneys-journey-history th {
+    border-top: 0;
+    background: #f4f6f8;
+    color: #3f4850;
+    font-size: .75rem;
+}
+
+.attendancejourneys-report-table td,
+.attendancejourneys-admin-table td,
+.attendancejourneys-individual-table td,
+.attendancejourneys-journey-history td {
+    vertical-align: middle;
+}
+
+.attendancejourneys-report-bulk-actions,
+.attendancejourneys-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-content-card {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    margin-bottom: 1rem;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-content-card > h3:first-child {
+    margin-top: 0;
+}
+
+.attendancejourneys-content-card .attendancejourneys-summary-grid {
+    margin-bottom: 0;
+}
+
+.attendancejourneys-admin-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    align-items: flex-end;
+}
+
+.attendancejourneys-self-page .attendancejourneys-session-summary,
+.attendancejourneys-self-page .attendancejourneys-self-form {
+    max-width: none;
+}
+
+.attendancejourneys-participant-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.attendancejourneys-participant-link:hover,
+.attendancejourneys-participant-link:focus {
+    color: #0f6cbf;
+    text-decoration: underline;
+}
+
+.attendancejourneys-profile-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    background: #fff;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-profile-identity {
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.attendancejourneys-journey-state {
+    border: 1px solid #d9dee3;
+    border-left: .25rem solid #0f6cbf;
+    border-radius: .375rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+}
+
+.attendancejourneys-journey-overview {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+    margin-bottom: 1.25rem;
+}
+
+.attendancejourneys-journey-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(8rem, 1fr));
+    flex: 1 1 auto;
+    gap: .75rem;
+}
+
+.attendancejourneys-journey-metric {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-journey-metric strong,
+.attendancejourneys-journey-metric span {
+    display: block;
+}
+
+.attendancejourneys-journey-metric strong {
+    color: #1d2125;
+    font-size: 1.45rem;
+    line-height: 1.15;
+}
+
+.attendancejourneys-journey-metric span {
+    margin-top: .25rem;
+    color: #5b6670;
+    font-size: .78rem;
+}
+
+.attendancejourneys-journey-create {
+    display: flex;
+    align-items: center;
+}
+
+.attendancejourneys-journey-create form,
+.attendancejourneys-journey-create .singlebutton {
+    margin: 0;
+}
+
+.attendancejourneys-journeys-table {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+.attendancejourneys-journeys-table th {
+    border-top: 0;
+    background: #f4f6f8;
+    color: #3f4850;
+    font-size: .75rem;
+}
+
+.attendancejourneys-journeys-table td {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    vertical-align: middle;
+}
+
+.attendancejourneys-journey-link {
+    color: #1d2125;
+}
+
+.attendancejourneys-journey-hero {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    align-items: flex-start;
+    border: 1px solid #d7dfe7;
+    border-left: .35rem solid #0f6cbf;
+    border-radius: .625rem;
+    background: linear-gradient(135deg, #fff 0%, #f4f8fc 100%);
+    margin-bottom: 1rem;
+    padding: 1.35rem 1.5rem;
+}
+
+.attendancejourneys-journey-hero h2 {
+    margin: .2rem 0 .35rem;
+}
+
+.attendancejourneys-journey-hero-status {
+    flex: 0 0 auto;
+}
+
+.attendancejourneys-journey-section {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #fff;
+    margin-top: 1rem;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-journey-section > .h5:first-child {
+    margin-top: 0;
+}
+
+.attendancejourneys-journey-open {
+    background: #f5f9fc;
+}
+
+.attendancejourneys-journey-closed {
+    background: #f1f8f3;
+    border-left-color: #357a38;
+}
+
+.attendancejourneys-profile-header .userpicture {
+    flex: 0 0 auto;
+}
+
+.attendancejourneys-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(9rem, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.attendancejourneys-detail-status {
+    white-space: nowrap;
+}
+
+.attendancejourneys-session-remarks {
+    min-width: 12rem;
+    white-space: normal;
+}
+
+.attendancejourneys-student-table td {
+    vertical-align: middle;
+}
+
+.attendancejourneys-self-page {
+    max-width: 58rem;
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-self-session-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.attendancejourneys-self-session-facts {
+    display: grid;
+    grid-template-columns: minmax(14rem, 2fr) minmax(7rem, .7fr) minmax(10rem, 1fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+    border-top: 1px solid #d7dfe7;
+    padding-top: 1rem;
+}
+
+.attendancejourneys-self-session-fact strong,
+.attendancejourneys-self-session-label {
+    display: block;
+}
+
+.attendancejourneys-self-session-label {
+    margin-bottom: .2rem;
+    color: #5b6670;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .035em;
+    text-transform: uppercase;
+}
+
+.attendancejourneys-self-notice {
+    margin: 1rem 0;
+    border: 1px solid #c9dceb;
+    border-radius: .5rem;
+    background: #f2f7fb;
+    padding: .9rem 1rem;
+    color: #34495b;
+}
+
+.attendancejourneys-self-notice strong,
+.attendancejourneys-self-notice div {
+    display: block;
+}
+
+.attendancejourneys-self-notice div {
+    margin-top: .2rem;
+    font-size: .875rem;
+}
+
+.attendancejourneys-self-form {
+    max-width: none;
+    border: 1px solid #dfe3e7;
+    border-radius: .625rem;
+    background: #fff;
+    box-shadow: 0 .125rem .35rem rgba(29, 33, 37, .05);
+    padding: 1.5rem;
+}
+
+.attendancejourneys-self-status-fieldset {
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.attendancejourneys-self-status-fieldset legend {
+    width: auto;
+    margin-bottom: .5rem;
+    font-size: 1rem;
+}
+
+.attendancejourneys-self-status-options {
+    min-width: 0;
+    margin-bottom: 1.25rem;
+}
+
+.attendancejourneys-self-status-options .attendancejourneys-status-choice span {
+    min-width: 7rem;
+    padding: .55rem 1rem;
+    text-align: center;
+}
+
+.attendancejourneys-self-partial,
+.attendancejourneys-self-remarks-group {
+    margin-top: 1.25rem;
+}
+
+.attendancejourneys-self-partial {
+    border-left: .25rem solid #b35c00;
+    border-radius: .25rem;
+    background: #fff8ee;
+    padding: 1rem 1.1rem;
+}
+
+.attendancejourneys-self-partial input {
+    max-width: 10rem;
+}
+
+.attendancejourneys-self-calculation {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1.25rem;
+    border-radius: .5rem;
+    background: #f1f8f3;
+    padding: 1rem 1.1rem;
+    color: #245b2b;
+}
+
+.attendancejourneys-self-calculation-label {
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.attendancejourneys-self-calculation-value {
+    font-size: 1.05rem;
+    text-align: right;
+}
+
+.attendancejourneys-self-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1.5rem;
+    border-top: 1px solid #e3e6e8;
+    padding-top: 1.25rem;
+}
+
+.attendancejourneys-selfbulk-callout {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin: 1.5rem 0;
+    border: 1px solid #c9dceb;
+    border-left: .3rem solid #0f6cbf;
+    border-radius: .5rem;
+    background: #f2f7fb;
+    padding: 1rem 1.25rem;
+}
+
+.attendancejourneys-selfbulk-page {
+    max-width: 68rem;
+    /* stylelint-disable-next-line csstree/validator -- Valid CSS containment; Moodle 5.2 bundles an older grammar. */
+    container-type: inline-size;
+}
+
+.attendancejourneys-selfbulk-progress {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1rem;
+    border-radius: .5rem;
+    background: #f4f6f8;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-selfbulk-progress-value {
+    color: #1d2125;
+}
+
+.attendancejourneys-selfbulk-list {
+    border: 1px solid #dfe3e7;
+    border-radius: .625rem;
+    background: #fff;
+    overflow: hidden;
+}
+
+.attendancejourneys-selfbulk-row {
+    display: grid;
+    grid-template-columns: minmax(14rem, .85fr) minmax(22rem, 1.4fr);
+    gap: 1.5rem;
+    align-items: start;
+    padding: 1.25rem;
+}
+
+.attendancejourneys-selfbulk-row + .attendancejourneys-selfbulk-row {
+    border-top: 1px solid #e3e6e8;
+}
+
+.attendancejourneys-selfbulk-row.is-locked {
+    background: #f8f9fa;
+}
+
+.attendancejourneys-selfbulk-status {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin: 0 0 .75rem;
+    border: 0;
+    padding: 0;
+}
+
+.attendancejourneys-selfbulk-status .attendancejourneys-status-choice span {
+    min-width: 5.5rem;
+    text-align: center;
+}
+
+.attendancejourneys-selfbulk-partial {
+    margin-bottom: .75rem;
+    border-left: .2rem solid #b35c00;
+    background: #fff8ee;
+    padding: .65rem .75rem;
+}
+
+.attendancejourneys-selfbulk-partial input {
+    max-width: 8rem;
+}
+
+.attendancejourneys-selfbulk-remarks {
+    margin-bottom: .5rem;
+}
+
+.attendancejourneys-selfbulk-calculation {
+    min-height: 1.25rem;
+    color: #245b2b;
+    font-weight: 600;
+}
+
+.attendancejourneys-selfbulk-locked {
+    border-radius: .375rem;
+    background: #eef1f3;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-selfbulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+
+.attendancejourneys-export {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 0;
+}
+
+.attendancejourneys-export .dataformatselector {
+    min-width: 0;
+    max-width: calc(100% - .5rem);
+}
+
+.attendancejourneys-export select {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.attendancejourneys-session-picker {
+    border: 1px solid #dee2e6;
+    border-radius: .5rem;
+    overflow: hidden;
+}
+
+.attendancejourneys-session-picker-row {
+    display: grid;
+    grid-template-columns: minmax(13rem, 1fr) minmax(10rem, auto) auto auto;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: #fff;
+}
+
+.attendancejourneys-session-picker-row + .attendancejourneys-session-picker-row {
+    border-top: 1px solid #dee2e6;
+}
+
+.attendancejourneys-session-picker-name {
+    display: block;
+    font-size: 1rem;
+}
+
+.attendancejourneys-session-picker-progress {
+    color: #495057;
+}
+
+.attendancejourneys-attendance-filters {
+    border: 1px solid #dfe3e7;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.attendancejourneys-attendance-filters .attendancejourneys-group-filter {
+    margin-bottom: .75rem;
+}
+
+.attendancejourneys-attendance-filters .attendancejourneys-journey-filter {
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+
+.attendancejourneys-attendance-filters .attendancejourneys-session-filters {
+    border: 0;
+    background: transparent;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.attendancejourneys-group-filter,
+.attendancejourneys-journey-filter {
+    margin-bottom: 1rem;
+}
+
+.attendancejourneys-group-filter .singleselect {
+    max-width: 28rem;
+}
+
+.attendancejourneys-group-filter form {
+    margin: 0;
+}
+
+.attendancejourneys-session-filters {
+    margin-bottom: 1.5rem;
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid #d9dee3;
+    border-radius: .375rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    padding: .75rem;
+}
+
+.attendancejourneys-session-filters input[type="search"] {
+    max-width: 22rem;
+}
+
+.attendancejourneys-session-filters select {
+    max-width: 15rem;
+}
+
+.attendancejourneys-clear-filters {
+    margin-left: .25rem;
+}
+
+@media (max-width: 767.98px) {
+    .attendancejourneys-session-filters input[type="search"],
+    .attendancejourneys-session-filters select {
+        max-width: none;
+        width: 100%;
+    }
+
+    .attendancejourneys-dashboard-grid,
+    .attendancejourneys-dashboard-session {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-summary-grid {
+        grid-template-columns: repeat(2, minmax(8rem, 1fr));
+    }
+
+    .attendancejourneys-session-picker-row {
+        grid-template-columns: 1fr auto;
+    }
+
+    .attendancejourneys-session-picker-progress {
+        grid-column: 1 / -1;
+    }
+}
+
+.attendancejourneys-bulk-actions {
+    margin-bottom: 1rem;
+    border: 1px solid #d6e4f0;
+    border-radius: .5rem;
+    background: #f5f9fc;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-session-bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.attendancejourneys-session-bulk-actions .btn {
+    margin-right: 0;
+    white-space: normal;
+}
+
+.attendancejourneys-participant-filters {
+    align-items: center;
+    background: #f8f9fa;
+    border: 1px solid #d9dee3;
+    border-radius: .5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 1rem;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-participant-filters input[type="search"] {
+    max-width: 22rem;
+}
+
+.attendancejourneys-participant-filters select {
+    max-width: 15rem;
+}
+
+.attendancejourneys-participant-count {
+    color: #495057;
+    margin-left: auto;
+}
+
+.attendancejourneys-individual-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    align-items: center;
+    margin: 1rem 0;
+    border: 1px solid #d9dee3;
+    border-radius: .5rem;
+    background: #f8f9fa;
+    padding: .85rem 1rem;
+}
+
+.attendancejourneys-individual-filters input[type="search"] {
+    flex: 1 1 16rem;
+    min-width: 12rem;
+}
+
+.attendancejourneys-individual-filters select {
+    flex: 0 1 14rem;
+}
+
+.attendancejourneys-no-filtered-participants {
+    margin-top: 1rem;
+}
+
+.attendancejourneys-bulk-actions label {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.attendancejourneys-bulk-status-buttons,
+.attendancejourneys-bulk-partial-minutes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+    align-items: center;
+}
+
+.attendancejourneys-bulk-partial-minutes {
+    flex-wrap: nowrap;
+    margin-left: .25rem;
+}
+
+.attendancejourneys-bulk-partial-minutes input {
+    width: 5.5rem;
+}
+
+.attendancejourneys-status-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    min-width: 23rem;
+    margin: 0;
+    border: 0;
+    padding: 0;
+}
+
+.attendancejourneys-status-choice {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
+    cursor: pointer;
+}
+
+.attendancejourneys-status-choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.attendancejourneys-status-choice span {
+    border: 1px solid #adb5bd;
+    border-radius: .35rem;
+    background: #fff;
+    padding: .35rem .6rem;
+    color: #343a40;
+    line-height: 1.2;
+}
+
+.attendancejourneys-status-choice input:focus + span {
+    box-shadow: 0 0 0 .2rem rgba(15, 108, 191, .25);
+}
+
+.attendancejourneys-status-choice input:checked + span {
+    border-color: #0f6cbf;
+    background: #0f6cbf;
+    color: #fff;
+    font-weight: 600;
+}
+
+.attendancejourneys-status-unrecorded input:checked + span {
+    border-color: #6c757d;
+    background: #6c757d;
+}
+
+.attendancejourneys-status-absent input:checked + span {
+    border-color: #ca3120;
+    background: #ca3120;
+}
+
+.attendancejourneys-status-partial input:checked + span {
+    border-color: #b35c00;
+    background: #b35c00;
+}
+
+.attendancejourneys-status-excused input:checked + span {
+    border-color: #5b4b8a;
+    background: #5b4b8a;
+}
+
+@media (max-width: 1199.98px) {
+    .attendancejourneys-journey-overview {
+        flex-direction: column;
+    }
+
+    .attendancejourneys-home-layout {
+        grid-template-columns: minmax(0, 1fr) 15rem;
+    }
+
+    .attendancejourneys-session-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .attendancejourneys-session-actions {
+        justify-content: flex-start;
+    }
+
+    .attendancejourneys-attendance-row {
+        grid-template-columns: minmax(8rem, .7fr) minmax(20rem, 1.5fr) minmax(12rem, 1fr);
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: 2 / -1;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .attendancejourneys-attendance-row {
+        grid-template-columns: minmax(8rem, .7fr) minmax(20rem, 1.5fr) minmax(12rem, 1fr);
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: 2 / -1;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .attendancejourneys-attendance-row {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: auto;
+    }
+
+    .attendancejourneys-status-options {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .attendancejourneys-journey-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attendancejourneys-journey-hero {
+        flex-direction: column;
+    }
+
+    .attendancejourneys-session-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attendancejourneys-form-card {
+        padding: 1rem;
+    }
+
+    .attendancejourneys-series-review #id_bulkactions,
+    .attendancejourneys-series-review fieldset[id^="id_occurrenceheader_"] {
+        padding-right: .85rem;
+        padding-left: .85rem;
+    }
+
+    .attendancejourneys-series-review .form-group.row > .col-md-3,
+    .attendancejourneys-series-review .form-group.row > .col-md-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .attendancejourneys-series-review .form-group.row > .col-md-3 {
+        margin-bottom: .3rem;
+        text-align: left;
+    }
+
+    .attendancejourneys-series-review input[type="submit"],
+    .attendancejourneys-series-review .btn {
+        white-space: normal;
+    }
+
+    .attendancejourneys-actions .btn,
+    .attendancejourneys-actions form,
+    .attendancejourneys-actions .singlebutton {
+        width: 100%;
+    }
+
+    .attendancejourneys-actions .btn {
+        justify-content: center;
+        white-space: normal;
+    }
+
+    .attendancejourneys-content-card,
+    .attendancejourneys-journey-section,
+    .attendancejourneys-profile-header {
+        padding: 1rem;
+    }
+
+    .attendancejourneys-home-hero {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .attendancejourneys-home-policy {
+        width: 100%;
+        border-top: 1px solid #d7dfe7;
+        border-left: 0;
+        padding-top: 1rem;
+        padding-left: 0;
+    }
+
+    .attendancejourneys-home-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .attendancejourneys-home-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-home-attention-item,
+    .attendancejourneys-home-session-row {
+        grid-template-columns: 3rem minmax(0, 1fr);
+    }
+
+    .attendancejourneys-home-attention-item {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .attendancejourneys-home-attention-item .btn,
+    .attendancejourneys-home-session-row .btn {
+        grid-column: 1 / -1;
+    }
+
+    .attendancejourneys-participant-filters input[type="search"],
+    .attendancejourneys-participant-filters select {
+        max-width: none;
+        width: 100%;
+    }
+
+    .attendancejourneys-participant-count {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .attendancejourneys-attendance-row {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-remarks-cell {
+        grid-column: auto;
+    }
+
+    .attendancejourneys-status-options {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 479.98px) {
+    .attendancejourneys-selfbulk-actions .btn,
+    .attendancejourneys-selfbulk-callout .btn {
+        width: 100%;
+    }
+
+    .attendancejourneys-self-form {
+        padding: 1rem;
+    }
+
+    .attendancejourneys-self-actions .btn {
+        width: 100%;
+    }
+
+    .attendancejourneys-home-metrics,
+    .attendancejourneys-session-metrics,
+    .attendancejourneys-journey-metrics,
+    .attendancejourneys-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .attendancejourneys-home-hero,
+    .attendancejourneys-course-card,
+    .attendancejourneys-session-summary,
+    .attendancejourneys-journey-hero {
+        padding: 1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .attendancejourneys-table-scroll {
+        scroll-behavior: auto;
+    }
+}
+
+.attendancejourneys-approval-control {
+    align-items: center;
+    display: flex;
+    font-size: .78rem;
+    gap: .4rem;
+    margin-top: .45rem;
+}
+
+.attendancejourneys-approval-meta {
+    color: #356b45;
+    font-size: .72rem;
+    margin-top: .2rem;
+}
+
+.attendancejourneys-source-approved {
+    background: #e7f5eb;
+    border-color: #86c59a;
+    color: #205c34;
+}
+.attendancejourneys-documentation-content img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 1rem auto 1.5rem;
+    border: 1px solid #dee2e6;
+    border-radius: .375rem;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+}

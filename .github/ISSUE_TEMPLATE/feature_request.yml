@@ -1,0 +1,17 @@
+name: Feature request
+description: Explain a teaching or administration need.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: Need and user role
+      description: Describe the pedagogical problem without naming clients or learners.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior and alternatives
+    validations:
+      required: true

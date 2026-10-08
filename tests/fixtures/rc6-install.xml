@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/attendancejourneys/tests/fixtures" VERSION="2026081508" COMMENT="XMLDB file for Attendance Journeys"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+  <TABLES>
+    <TABLE NAME="attendancejourneys" COMMENT="Attendance Journeys activity instances">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="experiencemode" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="professional"/>
+        <FIELD NAME="percentageenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="passinggrade" TYPE="number" LENGTH="5" NOTNULL="true" DEFAULT="80" DECIMALS="2"/>
+        <FIELD NAME="gradeenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="excusedenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="excusedmode" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="excluded"/>
+        <FIELD NAME="completionrecorded" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="completionallsessions" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="completionpass" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="completionclosed" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="studentselfrecord" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="calendarenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="journeytermsingular" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="journeytermplural" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="course" TYPE="foreign" FIELDS="course" REFTABLE="course" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_terms" COMMENT="Course-activity terminology overrides by language">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="concept" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="journey"/>
+        <FIELD NAME="langcode" TYPE="char" LENGTH="20" NOTNULL="true"/>
+        <FIELD NAME="singular" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="plural" TYPE="char" LENGTH="100" NOTNULL="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="activityconceptlanguage" UNIQUE="true" FIELDS="attendancejourneysid,concept,langcode"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_closures" COMMENT="Auditable final attendance results for participants">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="journeyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="applicablesessions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="recordedsessions" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="presentminutes" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="possibleminutes" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="percentage" TYPE="number" LENGTH="7" NOTNULL="false" DECIMALS="3"/>
+        <FIELD NAME="threshold" TYPE="number" LENGTH="5" NOTNULL="true" DEFAULT="0" DECIMALS="2"/>
+        <FIELD NAME="result" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="none"/>
+        <FIELD NAME="closedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeclosed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="reopenedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timereopened" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="activityuseractive" UNIQUE="false" FIELDS="attendancejourneysid, userid, active"/>
+        <INDEX NAME="journeyuseractive" UNIQUE="false" FIELDS="journeyid, userid, active"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_journeys" COMMENT="Optional attendance journeys grouping sessions and participants">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="enddate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="defaultmodality" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="unspecified"/>
+        <FIELD NAME="capacity" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="waitlistenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="completedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecompleted" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="group" TYPE="foreign" FIELDS="groupid" REFTABLE="groups" REFFIELDS="id"/>
+        <KEY NAME="completedby" TYPE="foreign" FIELDS="completedby" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="activityactive" UNIQUE="false" FIELDS="attendancejourneysid, active"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_waitlist" COMMENT="Auditable journey waiting-list entries">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="journeyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="waiting"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="updatedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeupdated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="journey" TYPE="foreign" FIELDS="journeyid" REFTABLE="attendancejourneys_journeys" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="journeystatustime" UNIQUE="false" FIELDS="journeyid,status,timecreated"/>
+        <INDEX NAME="journeyuserstatus" UNIQUE="false" FIELDS="journeyid,userid,status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_equivalences" COMMENT="Auditable cross-journey session equivalence decisions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="targetjourneyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="targetsessionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="sourcesessionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="pending"/>
+        <FIELD NAME="reason" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="createdby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="decidedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timedecided" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="decisionnote" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+        <KEY NAME="targetjourney" TYPE="foreign" FIELDS="targetjourneyid" REFTABLE="attendancejourneys_journeys" REFFIELDS="id"/>
+        <KEY NAME="targetsession" TYPE="foreign" FIELDS="targetsessionid" REFTABLE="attendancejourneys_sessions" REFFIELDS="id"/>
+        <KEY NAME="sourcesession" TYPE="foreign" FIELDS="sourcesessionid" REFTABLE="attendancejourneys_sessions" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="targetuserstatus" UNIQUE="false" FIELDS="targetsessionid,userid,status"/>
+        <INDEX NAME="sourceuserstatus" UNIQUE="false" FIELDS="sourcesessionid,userid,status"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_sessions" COMMENT="Course attendance sessions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="journeyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="sessiondate" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="duration" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" COMMENT="Duration in minutes"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="roomid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="description" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="modality" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="unspecified"/>
+        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="meetingurl" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="journey" TYPE="foreign" FIELDS="journeyid" REFTABLE="attendancejourneys_journeys" REFFIELDS="id"/>
+        <KEY NAME="group" TYPE="foreign" FIELDS="groupid" REFTABLE="groups" REFFIELDS="id"/>
+        <KEY NAME="room" TYPE="foreign" FIELDS="roomid" REFTABLE="attendancejourneys_rooms" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="sessiondate" UNIQUE="false" FIELDS="sessiondate"/>
+        <INDEX NAME="activitydate" UNIQUE="false" FIELDS="attendancejourneysid, sessiondate"/>
+        <INDEX NAME="activityjourney" UNIQUE="false" FIELDS="attendancejourneysid, journeyid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_rooms" COMMENT="Reusable rooms belonging to one Attendance Journeys activity">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
+        <FIELD NAME="code" TYPE="char" LENGTH="100" NOTNULL="false"/>
+        <FIELD NAME="capacity" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="location" TYPE="char" LENGTH="255" NOTNULL="false"/>
+        <FIELD NAME="notes" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="activityactive" UNIQUE="false" FIELDS="attendancejourneysid, active"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_records" COMMENT="Participant attendance records">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="status" TYPE="char" LENGTH="10" NOTNULL="true" DEFAULT="absent"/>
+        <FIELD NAME="minutesabsent" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="remarks" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="takenby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="approved" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="approvedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeapproved" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="changesrequested" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="reviewnote" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="reviewedby" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timereviewed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="session" TYPE="foreign" FIELDS="sessionid" REFTABLE="attendancejourneys_sessions" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="sessionuser" UNIQUE="true" FIELDS="sessionid, userid"/>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_reviews" COMMENT="Immutable audit history for participant declaration reviews">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="recordid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="action" TYPE="char" LENGTH="30" NOTNULL="true"/>
+        <FIELD NAME="actorid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="note" TYPE="text" NOTNULL="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="record" TYPE="foreign" FIELDS="recordid" REFTABLE="attendancejourneys_records" REFFIELDS="id"/>
+        <KEY NAME="session" TYPE="foreign" FIELDS="sessionid" REFTABLE="attendancejourneys_sessions" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="recordtime" UNIQUE="false" FIELDS="recordid,timecreated"/>
+        <INDEX NAME="usertime" UNIQUE="false" FIELDS="userid,timecreated"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="attendancejourneys_members" COMMENT="Frozen participant assignments and attempts for journeys">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="attendancejourneysid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="journeyid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="attemptnumber" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="active" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1"/>
+        <FIELD NAME="timeassigned" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+        <FIELD NAME="timeended" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="activity" TYPE="foreign" FIELDS="attendancejourneysid" REFTABLE="attendancejourneys" REFFIELDS="id"/>
+        <KEY NAME="journey" TYPE="foreign" FIELDS="journeyid" REFTABLE="attendancejourneys_journeys" REFFIELDS="id"/>
+        <KEY NAME="user" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="journeyuser" UNIQUE="true" FIELDS="journeyid, userid"/>
+        <INDEX NAME="activityuseractive" UNIQUE="false" FIELDS="attendancejourneysid, userid, active"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
