@@ -16,6 +16,8 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\write_lock::class)]
 /**
  * Tests attendance write lock lifecycle.
  * @group mod_attendancejourneys
@@ -24,8 +26,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\write_lock::class)]
 final class write_lock_test extends \advanced_testcase {
     public function test_release_allows_next_writer_and_other_activities(): void {
         $this->resetAfterTest();

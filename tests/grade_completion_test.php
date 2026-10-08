@@ -18,6 +18,15 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\completion\custom_completion;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_active_closure')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 /**
  * Gradebook and custom completion integration tests.
  *
@@ -35,15 +44,6 @@ use mod_attendancejourneys\completion\custom_completion;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_active_closure')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class grade_completion_test extends \advanced_testcase {
     public function test_grade_is_published_only_after_closure_and_cleared_after_reopening(): void {
         global $DB;

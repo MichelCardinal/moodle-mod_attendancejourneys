@@ -16,6 +16,9 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_touch_session')]
 /**
  * Database structure and optimistic-lock tests.
  *
@@ -26,9 +29,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_touch_session')]
 final class database_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

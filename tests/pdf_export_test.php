@@ -18,6 +18,8 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\local\pdf_export;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\pdf_export::class)]
 /**
  * Checks that the readable PDF layout preserves report data and escapes plain text.
  *
@@ -27,8 +29,6 @@ use mod_attendancejourneys\local\pdf_export;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\pdf_export::class)]
 final class pdf_export_test extends \basic_testcase {
     /**
      * Test repeated identities, field ordering, zeroes, blanks and hidden fields.

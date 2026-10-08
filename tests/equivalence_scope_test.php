@@ -18,6 +18,7 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\local\calculator;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
 /**
  * Approved equivalences cannot reuse a source across independently calculated journeys.
  *
@@ -27,7 +28,6 @@ use mod_attendancejourneys\local\calculator;
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
 final class equivalence_scope_test extends \advanced_testcase {
     /**
      * Create conflicting imported approvals on synthetic independent journeys.

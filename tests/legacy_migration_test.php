@@ -18,6 +18,12 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\local\legacy_migration;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\event\grading_mode_changed::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\legacy_migration::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 /**
  * Conservative conversion and read-only preview tests.
  *
@@ -32,12 +38,6 @@ use mod_attendancejourneys\local\legacy_migration;
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\event\grading_mode_changed::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\legacy_migration::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class legacy_migration_test extends \advanced_testcase {
     /**
      * Build an unfinished historical activity with an independent session.

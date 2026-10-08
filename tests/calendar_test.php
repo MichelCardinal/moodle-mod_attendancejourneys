@@ -16,6 +16,9 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_all_calendar_events')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_refresh_events')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_calendar_event')]
 /**
  * Moodle calendar integration tests.
  *
@@ -27,9 +30,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_all_calendar_events')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_refresh_events')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_calendar_event')]
 final class calendar_test extends \advanced_testcase {
     public function test_disabled_calendar_never_creates_an_event(): void {
         global $DB;

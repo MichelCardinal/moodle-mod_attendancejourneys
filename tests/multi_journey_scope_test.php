@@ -16,6 +16,16 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_find_journey_conflicts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_addable_journey_participants')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journeys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_report_journeys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_other_journey_names')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
 /**
  * Scope contracts needed by concurrent attendance journeys.
  *
@@ -34,16 +44,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_find_journey_conflicts')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_addable_journey_participants')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journeys')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_report_journeys')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_other_journey_names')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
 final class multi_journey_scope_test extends \advanced_testcase {
     /**
      * Both assignments are returned without mixing inactive memberships.

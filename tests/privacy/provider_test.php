@@ -19,6 +19,7 @@ namespace mod_attendancejourneys\privacy;
 use core_privacy\local\request\userlist;
 use core_privacy\tests\provider_testcase;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 /**
  * Privacy provider tests.
  *
@@ -28,7 +29,6 @@ use core_privacy\tests\provider_testcase;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 final class provider_test extends provider_testcase {
     public function test_context_erasure_removes_journey_authorship_without_touching_other_activities(): void {
         global $DB;

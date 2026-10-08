@@ -1558,5 +1558,10 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026100806, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026100807) {
+        // Coverage declarations remain compatible with Moodle 4.5 and later.
+        upgrade_mod_savepoint(true, 2026100807, 'attendancejourneys');
+    }
+
     return true;
 }

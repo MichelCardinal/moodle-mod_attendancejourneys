@@ -19,6 +19,13 @@ namespace mod_attendancejourneys;
 use mod_attendancejourneys\local\attempt_family;
 use mod_attendancejourneys\local\journey_grades;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_family::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 /**
  * A retake replaces one logical grade and completion outcome without rewriting history.
  *
@@ -34,13 +41,6 @@ use mod_attendancejourneys\local\journey_grades;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_family::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class attempt_grades_test extends \advanced_testcase {
     /**
      * Two learners have passed the root; the first has an explicitly opened retake.

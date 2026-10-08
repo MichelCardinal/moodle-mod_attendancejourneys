@@ -16,6 +16,9 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_apply_terminology_to_html')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_documentation_enabled')]
 /**
  * Tests for the bundled trilingual documentation.
  * @group mod_attendancejourneys
@@ -25,9 +28,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_apply_terminology_to_html')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_documentation_enabled')]
 final class documentation_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

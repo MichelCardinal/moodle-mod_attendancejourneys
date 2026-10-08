@@ -18,6 +18,12 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\local\calculator;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_add_review_history')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_format_review_note')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_record_audit_snapshot')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_self_record_is_editable')]
 /**
  * Student declaration, approval and audit workflow tests.
  * @group mod_attendancejourneys
@@ -30,12 +36,6 @@ use mod_attendancejourneys\local\calculator;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_add_review_history')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_format_review_note')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_record_audit_snapshot')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_self_record_is_editable')]
 final class self_recording_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

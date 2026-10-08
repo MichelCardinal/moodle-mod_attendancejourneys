@@ -18,6 +18,10 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\privacy\provider;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reset_user_data')]
 /**
  * Explicit retake links survive native backups and implement Moodle personal data handling.
  *
@@ -30,10 +34,6 @@ use mod_attendancejourneys\privacy\provider;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reset_user_data')]
 final class attempt_storage_test extends \core_privacy\tests\provider_testcase {
     /**
      * Create a private explicit retake family with no inferred historic assignments.

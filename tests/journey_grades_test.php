@@ -19,6 +19,17 @@ namespace mod_attendancejourneys;
 use mod_attendancejourneys\local\journey_grades;
 use mod_attendancejourneys\completion\custom_completion;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_active_closure')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_instance')]
 /**
  * Integration of separate final grades and all-required-journey completion.
  *
@@ -38,17 +49,6 @@ use mod_attendancejourneys\completion\custom_completion;
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_active_closure')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_instance')]
 final class journey_grades_test extends \advanced_testcase {
     /**
      * Closing one obligation publishes only its grade and cannot complete another obligation.

@@ -2,7 +2,7 @@
 
 ## 1.1.0 — 2026-10-08
 
-Primera versión pública estable basada en RC12 validada. Versión técnica 2026100806; sin cambios de esquema, cálculo, calificación o permisos. Punto de actualización nativo sin cambios pedagógicos y enlaces públicos de código y soporte. Las entradas anteriores describen desarrollo no publicado.
+Primera versión pública estable basada en RC12 validada. Versión técnica 2026100807; sin cambios de esquema, cálculo, calificación o permisos. Punto de actualización nativo sin cambios pedagógicos y enlaces públicos de código y soporte. Las entradas anteriores describen desarrollo no publicado.
 
 ## 1.1.0-rc12 — 2026-10-08
 

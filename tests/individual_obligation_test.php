@@ -19,6 +19,20 @@ namespace mod_attendancejourneys;
 use mod_attendancejourneys\local\individual_obligation;
 use mod_attendancejourneys\local\obligation_policy;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\individual_obligation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\obligation_policy::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_closure_blocker')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reset_user_data')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 /**
  * Individual decisions preserve attendance and require current authorised previews.
  *
@@ -41,20 +55,6 @@ use mod_attendancejourneys\local\obligation_policy;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\individual_obligation::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\obligation_policy::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_closure_blocker')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_instance')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reset_user_data')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class individual_obligation_test extends \core_privacy\tests\provider_testcase {
     /**
      * An automatic journey with two completed sessions and a 40 percent provisional result.

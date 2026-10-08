@@ -16,6 +16,11 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\backup_attendancejourneys_activity_structure_step::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\backup_attendancejourneys_activity_task::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_attendancejourneys_activity_structure_step::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_attendancejourneys_activity_task::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 /**
  * Moodle backup and restore tests.
  *
@@ -29,11 +34,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\backup_attendancejourneys_activity_structure_step::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\backup_attendancejourneys_activity_task::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\restore_attendancejourneys_activity_structure_step::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\restore_attendancejourneys_activity_task::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class backup_restore_test extends \advanced_testcase {
     public function test_restore_with_user_data_preserves_the_complete_attendance_history(): void {
         $restored = $this->backup_and_restore_fixture(true);

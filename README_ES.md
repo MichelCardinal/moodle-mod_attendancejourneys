@@ -1,4 +1,4 @@
-> **Transición de nombre:** esta versión 1.1.0 / 2026100806 utiliza `mod_attendancejourneys`. No es una actualización ordinaria de una instalación `mod_attendanceplus`. No desinstale el predecesor ni sustituya simplemente su carpeta. Los laboratorios existentes requieren una transición independiente, con respaldo y validación. Los respaldos RC11 originales se conservan; restáurelos en un entorno RC11 correspondiente antes de la transición y cree un nuevo respaldo. No se afirma que el nuevo componente restaure automáticamente respaldos del componente anterior.
+> **Transición de nombre:** esta versión 1.1.0 / 2026100807 utiliza `mod_attendancejourneys`. No es una actualización ordinaria de una instalación `mod_attendanceplus`. No desinstale el predecesor ni sustituya simplemente su carpeta. Los laboratorios existentes requieren una transición independiente, con respaldo y validación. Los respaldos RC11 originales se conservan; restáurelos en un entorno RC11 correspondiente antes de la transición y cree un nuevo respaldo. No se afirma que el nuevo componente restaure automáticamente respaldos del componente anterior.
 
 # Itinerarios de asistencia / Attendance Journeys / Parcours d’assiduité
 
@@ -7,7 +7,7 @@ Itinerarios de asistencia es un módulo de actividad de Moodle para la gestión 
 ## Versión
 
 - Versión: `1.1.0`
-- Número técnico: `2026100806`
+- Número técnico: `2026100807`
 - Compatibilidad prevista: Moodle 4.5 a 5.3
 - Madurez: estable
 

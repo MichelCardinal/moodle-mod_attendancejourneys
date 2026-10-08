@@ -18,6 +18,8 @@ namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\local\attempt_policy;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_family::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_policy::class)]
 /**
  * New attempts replace results within an obligation while preserving attendance history.
  *
@@ -28,8 +30,6 @@ use mod_attendancejourneys\local\attempt_policy;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_family::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_policy::class)]
 final class attempt_policy_test extends \basic_testcase {
     /**
      * Explicitly linked second and third attempts, deliberately out of order.

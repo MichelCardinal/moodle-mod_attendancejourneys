@@ -19,6 +19,9 @@ namespace mod_attendancejourneys;
 use mod_attendancejourneys\local\calculator;
 use mod_attendancejourneys\local\obligation_policy;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\obligation_policy::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_closure_blocker')]
 /**
  * Pedagogical boundary and waiver scenarios before persistence and UI integration.
  *
@@ -30,9 +33,6 @@ use mod_attendancejourneys\local\obligation_policy;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\obligation_policy::class)]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_closure_blocker')]
 final class obligation_policy_test extends \basic_testcase {
     /**
      * With no decision, an earlier absence remains part of the required minutes.

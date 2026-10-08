@@ -19,6 +19,8 @@ namespace mod_attendancejourneys;
 use mod_attendancejourneys\local\equivalence_history;
 use mod_attendancejourneys\privacy\provider;
 
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\equivalence_history::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 /**
  * Decision history persistence and privacy tests.
  *
@@ -29,8 +31,6 @@ use mod_attendancejourneys\privacy\provider;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\equivalence_history::class)]
-#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 final class equivalence_history_test extends \core_privacy\tests\provider_testcase {
     /**
      * Create a synthetic equivalence and two distinct staff actors.

@@ -16,6 +16,13 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_destination_access')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_management_access')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_deletion_blocker')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_final_results')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_records')]
 /**
  * Historical references must survive session and journey deletion attempts.
  *
@@ -31,13 +38,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_destination_access')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_management_access')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_deletion_blocker')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_final_results')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_records')]
 final class deletion_history_test extends \advanced_testcase {
     /**
      * Create two journeys and sessions without physical attendance records.

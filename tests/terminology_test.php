@@ -16,6 +16,11 @@
 
 namespace mod_attendancejourneys;
 
+#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_journey_terms')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_string')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_terminology')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_replace_ambiguous_french_terminology')]
 /**
  * Tests for contextual, display-only journey terminology.
  * @group mod_attendancejourneys
@@ -27,11 +32,6 @@ namespace mod_attendancejourneys;
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_journey_terms')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_string')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_terminology')]
-#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_replace_ambiguous_french_terminology')]
 final class terminology_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
