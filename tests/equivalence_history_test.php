@@ -22,11 +22,15 @@ use mod_attendancejourneys\privacy\provider;
 /**
  * Decision history persistence and privacy tests.
  *
+ * @covers \mod_attendancejourneys\local\equivalence_history
+ * @covers \mod_attendancejourneys\privacy\provider
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\equivalence_history::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 final class equivalence_history_test extends \core_privacy\tests\provider_testcase {
     /**
      * Create a synthetic equivalence and two distinct staff actors.

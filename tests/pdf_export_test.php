@@ -22,11 +22,13 @@ use mod_attendancejourneys\local\pdf_export;
  * Checks that the readable PDF layout preserves report data and escapes plain text.
  *
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\local\pdf_export
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\pdf_export::class)]
 final class pdf_export_test extends \basic_testcase {
     /**
      * Test repeated identities, field ordering, zeroes, blanks and hidden fields.

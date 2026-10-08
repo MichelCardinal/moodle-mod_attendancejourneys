@@ -22,11 +22,25 @@ use mod_attendancejourneys\local\journey_grades;
 /**
  * A retake replaces one logical grade and completion outcome without rewriting history.
  *
+ * @covers \mod_attendancejourneys\local\attempt_family
+ * @covers \mod_attendancejourneys\local\journey_grades
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_get_passinggrade
+ * @covers ::attendancejourneys_reopen_user_journey
+ * @covers ::attendancejourneys_update_completion
+ * @covers ::attendancejourneys_update_grades
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_family::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class attempt_grades_test extends \advanced_testcase {
     /**
      * Two learners have passed the root; the first has an explicitly opened retake.

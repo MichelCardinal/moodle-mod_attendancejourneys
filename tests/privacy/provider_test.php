@@ -22,11 +22,13 @@ use core_privacy\tests\provider_testcase;
 /**
  * Privacy provider tests.
  *
+ * @covers \mod_attendancejourneys\privacy\provider
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
 final class provider_test extends provider_testcase {
     public function test_context_erasure_removes_journey_authorship_without_touching_other_activities(): void {
         global $DB;

@@ -19,11 +19,17 @@ namespace mod_attendancejourneys;
 /**
  * Report filters, official totals and Moodle data-format tests.
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\local\calculator
+ * @covers ::attendancejourneys_audit_query
+ * @covers ::attendancejourneys_responsive_table
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_audit_query')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_responsive_table')]
 final class report_export_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

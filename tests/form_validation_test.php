@@ -19,11 +19,25 @@ namespace mod_attendancejourneys;
 /**
  * Server-side validation tests for session and journey forms.
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\form\attempt_confirmation
+ * @covers \mod_attendancejourneys\form\attempt_proposal
+ * @covers \mod_attendancejourneys\form\individual_obligation
+ * @covers \mod_attendancejourneys\form\journey
+ * @covers \mod_attendancejourneys\form\obligation_confirmation
+ * @covers \mod_attendancejourneys\form\series_review
+ * @covers \mod_attendancejourneys\form\session
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\attempt_confirmation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\attempt_proposal::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\individual_obligation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\journey::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\obligation_confirmation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\series_review::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\session::class)]
 final class form_validation_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

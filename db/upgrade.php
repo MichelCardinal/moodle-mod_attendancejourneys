@@ -1548,5 +1548,15 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026100804, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026100805) {
+        // Promote the validated release without changing stored pedagogical data.
+        upgrade_mod_savepoint(true, 2026100805, 'attendancejourneys');
+    }
+
+    if ($oldversion < 2026100806) {
+        // Language ordering and test coverage metadata preserve all stored data.
+        upgrade_mod_savepoint(true, 2026100806, 'attendancejourneys');
+    }
+
     return true;
 }

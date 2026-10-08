@@ -21,11 +21,29 @@ use mod_attendancejourneys\completion\custom_completion;
 /**
  * Gradebook and custom completion integration tests.
  *
+ * @covers \mod_attendancejourneys\completion\custom_completion
+ * @covers ::attendancejourneys_assign_journey_member
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_complete_journey
+ * @covers ::attendancejourneys_get_active_closure
+ * @covers ::attendancejourneys_get_passinggrade
+ * @covers ::attendancejourneys_grade_item_update
+ * @covers ::attendancejourneys_reopen_user_journey
+ * @covers ::attendancejourneys_update_grades
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_active_closure')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_passinggrade')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class grade_completion_test extends \advanced_testcase {
     public function test_grade_is_published_only_after_closure_and_cleared_after_reopening(): void {
         global $DB;

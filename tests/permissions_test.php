@@ -19,11 +19,13 @@ namespace mod_attendancejourneys;
 /**
  * Default Moodle role-capability tests.
  *
+ * @covers ::attendancejourneys_require_journey_access
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_journey_access')]
 final class permissions_test extends \advanced_testcase {
     public function test_default_roles_follow_the_documented_separation_of_duties(): void {
         $this->resetAfterTest();

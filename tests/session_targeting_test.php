@@ -19,11 +19,23 @@ namespace mod_attendancejourneys;
 /**
  * Session audience, enrolment and journey-attempt tests.
  * @group mod_attendancejourneys
+ * @covers ::attendancejourneys_assign_journey_member
+ * @covers ::attendancejourneys_get_session_participants
+ * @covers ::attendancejourneys_get_user_active_journey
+ * @covers ::attendancejourneys_is_light_mode
+ * @covers ::attendancejourneys_session_applies_to_user
+ * @covers ::attendancejourneys_user_can_self_record_session
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_session_participants')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_is_light_mode')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_applies_to_user')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
 final class session_targeting_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

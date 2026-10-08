@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.0 — 2026-10-08
+
+Promote the validated RC12 as the first public stable release. Technical version 2026100806; no schema, calculation, grade or permission changes. Add the native metadata-only savepoint and public repository/support links. Order English string keys without changing values and declare actual PHPUnit coverage targets for current Moodle coding checks. Earlier entries record unpublished development.
+
 ## 1.1.0-rc12 — 2026-10-08
 
 Adopt Attendance Journeys / mod_attendancejourneys, technical version 2026100804. Preserve native attendance calculations and pedagogical workflows. Validate the renamed component on seven native Moodle 4.5–5.3 configurations and rehearse separately backed-up component transitions and restoration on full private copies. Refresh 24 fictional guide images and multilingual documentation; keep English strings in the plugin and prepare translations separately. This ZIP is not an ordinary upgrade of the predecessor component. Previous entries describe that unpublished predecessor; publication remains pending.

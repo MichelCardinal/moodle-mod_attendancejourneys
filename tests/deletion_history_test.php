@@ -19,11 +19,25 @@ namespace mod_attendancejourneys;
 /**
  * Historical references must survive session and journey deletion attempts.
  *
+ * @covers ::attendancejourneys_delete_journey
+ * @covers ::attendancejourneys_journey_deletion_info
+ * @covers ::attendancejourneys_require_session_destination_access
+ * @covers ::attendancejourneys_require_session_management_access
+ * @covers ::attendancejourneys_session_deletion_blocker
+ * @covers ::attendancejourneys_session_has_final_results
+ * @covers ::attendancejourneys_session_has_records
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_destination_access')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_require_session_management_access')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_deletion_blocker')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_final_results')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_records')]
 final class deletion_history_test extends \advanced_testcase {
     /**
      * Create two journeys and sessions without physical attendance records.

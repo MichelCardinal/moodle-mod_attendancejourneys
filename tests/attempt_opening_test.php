@@ -21,11 +21,21 @@ use mod_attendancejourneys\local\attempt_opening;
 /**
  * Personal retakes require an authorised, current preview and preserve previous attendance.
  *
+ * @covers \mod_attendancejourneys\event\attempt_opened
+ * @covers \mod_attendancejourneys\local\attempt_opening
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_update_completion
+ * @covers ::attendancejourneys_update_grades
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\event\attempt_opened::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\attempt_opening::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_completion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class attempt_opening_test extends \advanced_testcase {
     /**
      * A passed obligation ready for an explicit retake.

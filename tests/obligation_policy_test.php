@@ -22,11 +22,17 @@ use mod_attendancejourneys\local\obligation_policy;
 /**
  * Pedagogical boundary and waiver scenarios before persistence and UI integration.
  *
+ * @covers \mod_attendancejourneys\local\calculator
+ * @covers \mod_attendancejourneys\local\obligation_policy
+ * @covers ::attendancejourneys_closure_blocker
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\obligation_policy::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_closure_blocker')]
 final class obligation_policy_test extends \basic_testcase {
     /**
      * With no decision, an earlier absence remains part of the required minutes.

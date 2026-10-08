@@ -19,11 +19,15 @@ namespace mod_attendancejourneys;
 /**
  * Journey closure and reopening tests.
  *
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_reopen_user_journey
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
 final class journey_lifecycle_test extends \advanced_testcase {
     public function test_individual_journey_result_is_frozen_then_reopened_without_losing_history(): void {
         global $DB;

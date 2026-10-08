@@ -1,5 +1,9 @@
 # Historique des versions
 
+## 1.1.0 — 2026-10-08
+
+Première version publique stable issue de la RC12 validée. Version technique 2026100806; aucun changement de schéma, calcul, note ou permission. Étape de version native sans mutation pédagogique et liens publics de code/assistance. Les entrées antérieures décrivent le développement non publié.
+
 ## 1.1.0-rc12 — 2026-10-08
 
 Adoption de Parcours d’assiduité / mod_attendancejourneys, version technique 2026100804. Calculs et parcours pédagogiques conservés. Validation du composant renommé sur sept configurations natives Moodle 4.5–5.3; transitions sauvegardées et retours éprouvés séparément sur copies privées complètes. Actualisation des 24 captures fictives et des guides multilingues; chaînes anglaises dans le plugin, traductions préparées séparément. Ce ZIP ne met pas directement à niveau le composant prédécesseur. Les entrées antérieures décrivent ce prédécesseur non publié; publication en attente.

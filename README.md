@@ -1,6 +1,6 @@
-> **Renaming transition:** This is the working Attendance Journeys component (`mod_attendancejourneys`), candidate 1.1.0-rc12 / 2026100804. It is not a normal upgrade ZIP for an existing `mod_attendanceplus` installation. Do not uninstall the predecessor or replace its folder. Existing pre-publication laboratories require a backed-up, separately validated component transition. Original RC11 backups remain unchanged; restore them in a matching RC11 recovery environment before transition and create a new backup with the renamed component. Native automatic restoration of predecessor-component backups is not claimed.
+> **Renaming transition:** This is the working Attendance Journeys component (`mod_attendancejourneys`), candidate 1.1.0 / 2026100806. It is not a normal upgrade ZIP for an existing `mod_attendanceplus` installation. Do not uninstall the predecessor or replace its folder. Existing pre-publication laboratories require a backed-up, separately validated component transition. Original RC11 backups remain unchanged; restore them in a matching RC11 recovery environment before transition and create a new backup with the renamed component. Native automatic restoration of predecessor-component backups is not claimed.
 
-> Candidate 1.1.0-rc12 has passed the local seven-configuration Moodle 4.5–5.3 test matrix. Full-copy component transitions and restoration have been validated separately. This is a release candidate, not a published or Marketplace-approved release.
+> Candidate 1.1.0 has passed the local seven-configuration Moodle 4.5–5.3 test matrix. Full-copy component transitions and restoration have been validated separately. Moodle Marketplace review is independent; no approval is claimed.
 
 # Attendance Journeys / Parcours d’assiduité
 
@@ -8,14 +8,14 @@ Attendance Journeys is a Moodle activity module for professional attendance mana
 
 Parcours d’assiduité est un module d’activité Moodle destiné à la gestion professionnelle des présences. Il prend en charge les sessions, les séries, les parcours, les groupes Moodle, la présence partielle exprimée en minutes d’absence, les seuils configurables, les résultats définitifs, le carnet de notes et le journal d’audit institutionnel.
 
-## Release candidate
+## Release
 
-- Release: `1.1.0-rc12`
-- Technical version: `2026100804`
+- Release: `1.1.0`
+- Technical version: `2026100806`
 - Target compatibility: Moodle 4.5 through 5.3
-- Maturity: release candidate
+- Maturity: stable
 
-This local release candidate adopts Attendance Journeys and the independent technical component `mod_attendancejourneys`. It retains the predecessor’s attendance calculations, institutional settings and delegated pedagogical permissions. All predecessor archives remain unchanged. Existing pre-publication installations need the separately tested, backed-up component transition described above. Review the candidate before publication. Nothing is published on GitHub, Moodle Marketplace or AMOS.
+This release adopts Attendance Journeys and the independent technical component `mod_attendancejourneys`. It retains the predecessor’s attendance calculations, institutional settings and delegated pedagogical permissions. All predecessor archives remain unchanged. Existing pre-publication installations need the separately tested, backed-up component transition described above. Source and issue tracking: https://github.com/MichelCardinal/moodle-mod_attendancejourneys. French and Spanish AMOS contributions follow component approval.
 
 New activities use a required main journey by default. Each independent obligation has its own threshold and grade, published only after explicit closure of its selected attempt. Automatic completion requires all assigned required journeys to be closed and passed. Justified absence counts as absence; an explicit staff exemption removes the session duration from required time.
 
@@ -85,7 +85,7 @@ GNU General Public License v3 or later.
 
 ## Résumé français
 
-Candidate locale `1.1.0-rc12`, numéro technique `2026100804`, compatibilité visée Moodle 4.5 à 5.3. Nom public et composant harmonisés; 24 captures fictives et guides illustrés actualisés en anglais, français et espagnol. La matrice native du nouveau composant et les transitions sur copies complètes sont vérifiées. Le ZIP ne met pas directement à niveau une installation de l’ancien composant. Une revue préalable à la diffusion reste nécessaire. Aucune publication GitHub, Moodle Marketplace ou AMOS.
+Candidate locale `1.1.0`, numéro technique `2026100806`, compatibilité visée Moodle 4.5 à 5.3. Nom public et composant harmonisés; 24 captures fictives et guides illustrés actualisés en anglais, français et espagnol. La matrice native du nouveau composant et les transitions sur copies complètes sont vérifiées. Le ZIP ne met pas directement à niveau une installation de l’ancien composant. Une revue préalable à la diffusion reste nécessaire. Aucune publication GitHub, Moodle Marketplace ou AMOS.
 
 Parcours d’assiduité offre les séances de parcours avec audience inscrite, de groupe ou explicitement affectée, les séries avec aperçu et ajustements individuels, les locaux du cours, les groupes Moodle, le calcul automatique des durées, les modalités en classe, en ligne ou hybrides, la présence partielle en minutes d’absence, les seuils configurables, l’auto-saisie étudiante avec approbation, les résultats définitifs, les notes, l’achèvement, les rapports, les exports et le journal d’audit. Les séances communes et de groupe indépendantes restent disponibles dans les activités historiques. Dans les nouvelles activités, une absence justifiée conserve le temps exigé; une dispense de séance autorisée le retire du calcul.
 
@@ -102,3 +102,11 @@ La documentation française se trouve dans les fichiers `GUIDE_UTILISATEUR_FR.md
 French quick guides: [installation](docs/INSTALLATION_RAPIDE_FR.md) and [teacher workflow](docs/DEMARRAGE_ENSEIGNANT_FR.md). Detailed multilingual guides remain in `docs/`. The separate demonstration backup contains no user data.
 
 Attendance entry is limited to 100 participants per page. Search and filtering operate within the current page; save before moving to another page. The approval button approves declarations on the current page.
+
+## Documentation and support
+
+- [English illustrated guide](docs/USER_GUIDE_EN.md)
+- [Guide illustré français](docs/GUIDE_UTILISATEUR_FR.md)
+- [Guía ilustrada en español](docs/GUIA_USUARIO_ES.md)
+- [Bug reports and feature requests](https://github.com/MichelCardinal/moodle-mod_attendancejourneys/issues)
+- [Private vulnerability reporting](https://github.com/MichelCardinal/moodle-mod_attendancejourneys/security/advisories/new)

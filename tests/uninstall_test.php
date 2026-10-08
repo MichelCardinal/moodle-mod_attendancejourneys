@@ -19,11 +19,13 @@ namespace mod_attendancejourneys;
 /**
  * Verifies that uninstalling activities removes Moodle-owned state as well.
  *
+ * @covers ::xmldb_attendancejourneys_uninstall
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('xmldb_attendancejourneys_uninstall')]
 final class uninstall_test extends \advanced_testcase {
     public function test_uninstall_cleans_completion_and_preserves_other_activities(): void {
         global $CFG, $DB;

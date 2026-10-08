@@ -23,11 +23,29 @@ use mod_attendancejourneys\privacy\provider;
 /**
  * Cancellation preserves attendance while changing obligations only in open journeys.
  *
+ * @covers \mod_attendancejourneys\event\session_cancellation_changed
+ * @covers \mod_attendancejourneys\local\calculator
+ * @covers \mod_attendancejourneys\local\session_cancellation
+ * @covers \mod_attendancejourneys\privacy\provider
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_reopen_user_journey
+ * @covers ::attendancejourneys_session_deletion_blocker
+ * @covers ::attendancejourneys_update_calendar_event
+ * @covers ::attendancejourneys_user_can_self_record_session
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\event\session_cancellation_changed::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\session_cancellation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\privacy\provider::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_deletion_blocker')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_calendar_event')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
 final class session_cancellation_test extends \core_privacy\tests\provider_testcase {
     /**
      * Create a graded journey with recorded 100-minute presence and 60-minute absence.

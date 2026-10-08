@@ -19,11 +19,13 @@ namespace mod_attendancejourneys;
 /**
  * Exercises the complete RC6 schema upgrade without converting historical obligations.
  *
+ * @covers ::xmldb_attendancejourneys_upgrade
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('xmldb_attendancejourneys_upgrade')]
 final class schema_upgrade_test extends \advanced_testcase {
     /**
      * RC6 rows and protected Moodle outcomes survive all post-RC6 upgrade steps.

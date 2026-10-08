@@ -1,17 +1,17 @@
-> **Transición de nombre:** esta candidata de trabajo 1.1.0-rc12 / 2026100804 utiliza `mod_attendancejourneys`. No es una actualización ordinaria de una instalación `mod_attendanceplus`. No desinstale el predecesor ni sustituya simplemente su carpeta. Los laboratorios existentes requieren una transición independiente, con respaldo y validación. Los respaldos RC11 originales se conservan; restáurelos en un entorno RC11 correspondiente antes de la transición y cree un nuevo respaldo. No se afirma que el nuevo componente restaure automáticamente respaldos del componente anterior.
+> **Transición de nombre:** esta versión 1.1.0 / 2026100806 utiliza `mod_attendancejourneys`. No es una actualización ordinaria de una instalación `mod_attendanceplus`. No desinstale el predecesor ni sustituya simplemente su carpeta. Los laboratorios existentes requieren una transición independiente, con respaldo y validación. Los respaldos RC11 originales se conservan; restáurelos en un entorno RC11 correspondiente antes de la transición y cree un nuevo respaldo. No se afirma que el nuevo componente restaure automáticamente respaldos del componente anterior.
 
 # Itinerarios de asistencia / Attendance Journeys / Parcours d’assiduité
 
 Itinerarios de asistencia es un módulo de actividad de Moodle para la gestión profesional de la asistencia. Admite sesiones individuales, series de sesiones, itinerarios formativos, grupos de Moodle, asistencia parcial expresada como minutos de ausencia, umbrales configurables, resultados finales, integración con el libro de calificaciones e historial de auditoría institucional.
 
-## Versión candidata
+## Versión
 
-- Versión: `1.1.0-rc12`
-- Número técnico: `2026100804`
+- Versión: `1.1.0`
+- Número técnico: `2026100806`
 - Compatibilidad prevista: Moodle 4.5 a 5.3
-- Madurez: candidata
+- Madurez: estable
 
-Esta candidata local adopta Itinerarios de asistencia y el componente independiente `mod_attendancejourneys`. Conserva los cálculos, las políticas institucionales y los permisos pedagógicos del predecesor. Sus archivos históricos permanecen intactos. Las instalaciones anteriores requieren la transición independiente, respaldada y validada descrita arriba. La matriz local de siete configuraciones Moodle 4.5–5.3 y las transiciones en copias completas han pasado. Revise la candidata antes de publicarla. Nada está publicado en GitHub, Moodle Marketplace ni AMOS.
+Esta versión adopta Itinerarios de asistencia y el componente independiente `mod_attendancejourneys`. Conserva los cálculos, las políticas institucionales y los permisos pedagógicos del predecesor. Sus archivos históricos permanecen intactos. Las instalaciones anteriores requieren la transición independiente, respaldada y validada descrita arriba. La matriz local de siete configuraciones Moodle 4.5–5.3 y las transiciones en copias completas han pasado. Código y seguimiento de incidencias: https://github.com/MichelCardinal/moodle-mod_attendancejourneys. Las contribuciones AMOS siguen a la aprobación del componente.
 
 El plugin instalable contiene solo cadenas inglesas. Las traducciones francesas y españolas se conservan por separado para AMOS y las personalizaciones locales del laboratorio. La documentación ilustrada sigue siendo multilingüe.
 
@@ -73,3 +73,11 @@ Las capacidades se pueden adaptar mediante las anulaciones de roles de Moodle.
 ## Licencia
 
 GNU General Public License v3 o posterior.
+
+## Documentation and support
+
+- [English illustrated guide](docs/USER_GUIDE_EN.md)
+- [Guide illustré français](docs/GUIDE_UTILISATEUR_FR.md)
+- [Guía ilustrada en español](docs/GUIA_USUARIO_ES.md)
+- [Bug reports and feature requests](https://github.com/MichelCardinal/moodle-mod_attendancejourneys/issues)
+- [Private vulnerability reporting](https://github.com/MichelCardinal/moodle-mod_attendancejourneys/security/advisories/new)

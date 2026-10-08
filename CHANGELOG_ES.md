@@ -1,5 +1,9 @@
 # Registro de cambios
 
+## 1.1.0 — 2026-10-08
+
+Primera versión pública estable basada en RC12 validada. Versión técnica 2026100806; sin cambios de esquema, cálculo, calificación o permisos. Punto de actualización nativo sin cambios pedagógicos y enlaces públicos de código y soporte. Las entradas anteriores describen desarrollo no publicado.
+
 ## 1.1.0-rc12 — 2026-10-08
 
 Adopción de Itinerarios de asistencia / mod_attendancejourneys, versión técnica 2026100804. Se conservan los cálculos y los flujos pedagógicos. Validación del componente en siete configuraciones nativas Moodle 4.5–5.3; transiciones respaldadas y restauraciones comprobadas por separado en copias privadas completas. Actualización de 24 capturas ficticias y guías multilingües; cadenas inglesas en el plugin y traducciones preparadas aparte. Este ZIP no actualiza directamente el componente predecesor. Las entradas anteriores describen ese predecesor no publicado; publicación pendiente.

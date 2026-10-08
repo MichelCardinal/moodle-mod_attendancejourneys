@@ -21,11 +21,21 @@ use mod_attendancejourneys\local\calculator;
 /**
  * Student declaration, approval and audit workflow tests.
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\local\calculator
+ * @covers ::attendancejourneys_add_review_history
+ * @covers ::attendancejourneys_format_review_note
+ * @covers ::attendancejourneys_record_audit_snapshot
+ * @covers ::attendancejourneys_self_record_is_editable
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_add_review_history')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_format_review_note')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_record_audit_snapshot')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_self_record_is_editable')]
 final class self_recording_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

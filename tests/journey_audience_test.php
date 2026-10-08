@@ -19,11 +19,35 @@ namespace mod_attendancejourneys;
 /**
  * Explicit audience modes must not depend on whether a membership row happens to exist.
  *
+ * @covers \mod_attendancejourneys\local\journey_grades
+ * @covers ::attendancejourneys_assign_journey_member
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_get_addable_journey_participants
+ * @covers ::attendancejourneys_get_journey_participants
+ * @covers ::attendancejourneys_get_session_participants
+ * @covers ::attendancejourneys_get_user_active_journeys
+ * @covers ::attendancejourneys_get_user_report_journeys
+ * @covers ::attendancejourneys_journey_audience_is_editable
+ * @covers ::attendancejourneys_session_applies_to_user
+ * @covers ::attendancejourneys_update_grades
+ * @covers ::attendancejourneys_user_can_self_record_session
  * @package mod_attendancejourneys
  * @category test
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_addable_journey_participants')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_journey_participants')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_session_participants')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journeys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_report_journeys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_audience_is_editable')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_applies_to_user')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
 final class journey_audience_test extends \advanced_testcase {
     /**
      * Normal creation is usable without a manual journey and publishes only after closure.

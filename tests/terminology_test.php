@@ -19,11 +19,19 @@ namespace mod_attendancejourneys;
 /**
  * Tests for contextual, display-only journey terminology.
  * @group mod_attendancejourneys
+ * @covers ::attendancejourneys_get_journey_terms
+ * @covers ::attendancejourneys_get_string
+ * @covers ::attendancejourneys_get_terminology
+ * @covers ::attendancejourneys_replace_ambiguous_french_terminology
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_journey_terms')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_string')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_terminology')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_replace_ambiguous_french_terminology')]
 final class terminology_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

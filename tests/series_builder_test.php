@@ -19,11 +19,13 @@ namespace mod_attendancejourneys;
 /**
  * Series preview generation and bulk-change tests.
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\local\series_builder
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\series_builder::class)]
 final class series_builder_test extends \advanced_testcase {
     public function test_generates_numbered_occurrences_across_daylight_saving_time(): void {
         $timezone = new \DateTimeZone('America/Toronto');

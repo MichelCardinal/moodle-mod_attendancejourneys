@@ -19,11 +19,13 @@ namespace mod_attendancejourneys;
 /**
  * Bulk session scheduling tests.
  * @group mod_attendancejourneys
+ * @covers \mod_attendancejourneys\local\session_bulk_manager
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\session_bulk_manager::class)]
 final class session_bulk_manager_test extends \advanced_testcase {
     public function test_day_and_minute_shifts_preserve_duration_and_local_time(): void {
         $timezone = new \DateTimeZone('America/Toronto');

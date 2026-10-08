@@ -21,11 +21,13 @@ use mod_attendancejourneys\local\calculator;
 /**
  * Approved equivalences cannot reuse a source across independently calculated journeys.
  *
+ * @covers \mod_attendancejourneys\local\calculator
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\calculator::class)]
 final class equivalence_scope_test extends \advanced_testcase {
     /**
      * Create conflicting imported approvals on synthetic independent journeys.

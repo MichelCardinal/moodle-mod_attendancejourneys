@@ -19,11 +19,31 @@ namespace mod_attendancejourneys;
 /**
  * Destructive administration and deletion-safety tests.
  * @group mod_attendancejourneys
+ * @covers ::attendancejourneys_add_review_history
+ * @covers ::attendancejourneys_assign_journey_member
+ * @covers ::attendancejourneys_clear_session_records
+ * @covers ::attendancejourneys_delete_journey
+ * @covers ::attendancejourneys_journey_deletion_info
+ * @covers ::attendancejourneys_reset_user_data
+ * @covers ::attendancejourneys_session_audience_changed
+ * @covers ::attendancejourneys_session_has_final_results
+ * @covers ::attendancejourneys_session_structure_changed
+ * @covers ::attendancejourneys_update_calendar_event
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_add_review_history')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_clear_session_records')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_delete_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_deletion_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reset_user_data')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_audience_changed')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_has_final_results')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_structure_changed')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_calendar_event')]
 final class administrative_lifecycle_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

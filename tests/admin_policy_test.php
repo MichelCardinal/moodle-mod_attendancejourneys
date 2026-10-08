@@ -19,11 +19,15 @@ namespace mod_attendancejourneys;
 /**
  * Tests for institutional defaults and server-side locks.
  * @group mod_attendancejourneys
+ * @covers ::attendancejourneys_apply_admin_policies
+ * @covers ::attendancejourneys_get_admin_policies
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\Group('mod_attendancejourneys')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_apply_admin_policies')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_admin_policies')]
 final class admin_policy_test extends \advanced_testcase {
     protected function setUp(): void {
         parent::setUp();

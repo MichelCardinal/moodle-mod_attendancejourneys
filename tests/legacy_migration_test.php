@@ -21,11 +21,23 @@ use mod_attendancejourneys\local\legacy_migration;
 /**
  * Conservative conversion and read-only preview tests.
  *
+ * @covers \mod_attendancejourneys\event\grading_mode_changed
+ * @covers \mod_attendancejourneys\local\legacy_migration
+ * @covers ::attendancejourneys_calculate_user_attendance
+ * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_grade_item_update
+ * @covers ::attendancejourneys_update_grades
  * @package    mod_attendancejourneys
  * @category   test
  * @copyright  2026 Michel Cardinal
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\event\grading_mode_changed::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\legacy_migration::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_calculate_user_attendance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_grade_item_update')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 final class legacy_migration_test extends \advanced_testcase {
     /**
      * Build an unfinished historical activity with an independent session.
