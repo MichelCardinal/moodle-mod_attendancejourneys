@@ -1,9 +1,13 @@
 # Registro de cambios
 
-## 1.2.0 (development)
+## 1.2.0
 
-- Seguimiento de matrículas antes de registrar asistencia, incorporación múltiple y alineación de las columnas de terminología.
+Compilación 2026111001. Compatible con Moodle 4.5–5.3.
 
+- Planificar sesiones antes de la matriculación. Un nuevo itinerario puede seguir las matrículas activas hasta el primer registro de asistencia o de un resultado final.
+- Añadir varios participantes a un itinerario manual en un solo envío.
+- Alinear las etiquetas de singular y plural con sus campos, también en pantallas pequeñas.
+- Los itinerarios existentes conservan su comportamiento y su historial de asistencia.
 
 ## 1.1.0 — 2026-10-08
 

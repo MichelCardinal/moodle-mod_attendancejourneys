@@ -259,7 +259,8 @@ if ($action === 'addmember') {
         }
         $message = get_string('journeyparticipantsadded', 'attendancejourneys', count($userids));
         if ($othernames) {
-            $message .= ' ' . get_string('otherjourneysnotice', 'attendancejourneys', implode(', ', array_unique($othernames)));
+            $notice = count($userids) === 1 ? 'otherjourneysnotice' : 'otherjourneysbulknotice';
+            $message .= ' ' . get_string($notice, 'attendancejourneys', implode(', ', array_unique($othernames)));
         }
         redirect($url, $message, null, \core\output\notification::NOTIFY_SUCCESS);
     }

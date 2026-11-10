@@ -683,6 +683,7 @@ $string['obligationwaive'] = 'Waive the whole journey obligation';
 $string['obligationwaived'] = 'Journey obligation waived';
 $string['obligationwaivednotice'] = 'This whole journey obligation is waived. Attendance remains in the history; no attendance grade is awarded.';
 $string['officialcalculationnotice'] = '{$a} pending declaration(s) are visible but excluded from the official result until approved.';
+$string['otherjourneysbulknotice'] = 'Other journeys for these participants: {$a}. Each journey has its own attendance requirements.';
 $string['otherjourneysnotice'] = 'This participant also belongs to: {$a}. Each journey has its own attendance requirements.';
 $string['overlapduration'] = 'Overlap';
 $string['partialminuteserror'] = 'Enter between 1 and {$a} minus 1 minutes.';

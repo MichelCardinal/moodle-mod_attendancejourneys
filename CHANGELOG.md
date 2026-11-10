@@ -1,9 +1,13 @@
 # Changelog
 
-## 1.2.0 (development)
+## 1.2.0
 
-- Follow course enrolments before attendance starts, add multiple participants at once, and align the terminology columns.
+Build 2026111001. Supports Moodle 4.5–5.3.
 
+- Plan sessions before participants enrol. A new journey can follow active course enrolments until attendance is first saved or a final result is recorded.
+- Add several participants to a manual journey in one submission.
+- Align the singular and plural labels with their terminology fields, including on small screens.
+- Existing journeys keep their enrolment behaviour and attendance history.
 
 ## 1.1.0 — 2026-10-08
 
