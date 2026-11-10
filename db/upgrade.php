@@ -1578,5 +1578,10 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026111002, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026111003) {
+        // The terminology layout changes no stored data.
+        upgrade_mod_savepoint(true, 2026111003, 'attendancejourneys');
+    }
+
     return true;
 }

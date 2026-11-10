@@ -2,7 +2,7 @@
 
 ## 1.2.0
 
-Build 2026111002. Compatible avec Moodle 4.5 à 5.3.
+Build 2026111003. Compatible avec Moodle 4.5 à 5.3.
 
 - Planifier des séances avant les inscriptions. Un nouveau parcours peut suivre les inscriptions actives jusqu’à la première prise de présences ou au premier résultat final enregistré.
 - Ajouter plusieurs participants à un parcours manuel en un seul envoi.

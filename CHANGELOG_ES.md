@@ -2,7 +2,7 @@
 
 ## 1.2.0
 
-Compilación 2026111002. Compatible con Moodle 4.5–5.3.
+Compilación 2026111003. Compatible con Moodle 4.5–5.3.
 
 - Planificar sesiones antes de la matriculación. Un nuevo itinerario puede seguir las matrículas activas hasta el primer registro de asistencia o de un resultado final.
 - Añadir varios participantes a un itinerario manual en un solo envío.

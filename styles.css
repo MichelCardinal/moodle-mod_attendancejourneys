@@ -1821,7 +1821,8 @@
 .attendancejourneys-term-heading,
 .mform .form-control[data-attendancejourneys-term] {
     box-sizing: border-box;
-    width: min(10rem, 38vw);
+    width: 38vw;
+    max-width: 10rem;
     min-width: 0;
     overflow-wrap: anywhere;
 }
