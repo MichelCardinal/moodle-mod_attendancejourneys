@@ -68,7 +68,12 @@ $PAGE->set_url($url);
 $PAGE->set_title(format_string($journey->name));
 $PAGE->set_heading(format_string($course->fullname));
 $audienceeditable = attendancejourneys_journey_audience_is_editable($journey);
-$audiencelockmessage = (int) $journey->audiencemode === 1 ? 'journeyaudienceautomaticnotice' : 'journeyaudiencelocked';
+$audiencelockmessage = match ((int) $journey->audiencemode) {
+    1 => 'journeyaudienceautomaticnotice',
+    3 => 'journeyaudiencepreparing',
+    4 => 'journeyaudiencefrozenafterstart',
+    default => 'journeyaudiencelocked',
+};
 
 if ($action === 'addwaitlist') {
     if (empty($journey->waitlistenabled) || !$audienceeditable) {
@@ -224,42 +229,43 @@ if ($action === 'addmember') {
     $formurl = new moodle_url($url, ['action' => 'addmember']);
     $form = new \mod_attendancejourneys\form\journey_member(
         $formurl,
-        ['participants' => $addable, 'overcapacity' => $overcapacity]
+        ['participants' => $addable, 'capacity' => (int) $journey->capacity, 'occupancy' => $currentoccupancy]
     );
     $form->set_data((object) ['id' => $cm->id, 'journeyid' => $journey->id]);
     if ($form->is_cancelled()) {
         redirect($url);
     }
     if ($data = $form->get_data()) {
-        if (!isset($addable[(int) $data->userid])) {
-            throw new moodle_exception('invaliduser');
+        $userids = array_values(array_unique(array_map('intval', $data->userids)));
+        $transaction = $DB->start_delegated_transaction();
+        $othernames = [];
+        foreach ($userids as $memberuserid) {
+            $membershipid = attendancejourneys_assign_journey_member($context, $journey, $memberuserid);
+            \mod_attendancejourneys\event\journey_member_added::create([
+                'objectid' => $membershipid, 'context' => $context, 'relateduserid' => $memberuserid,
+                'other' => ['attendancejourneysid' => (int) $activity->id, 'journeyid' => (int) $journey->id],
+            ])->trigger();
+            $othernames = array_merge($othernames, attendancejourneys_other_journey_names(
+                $context,
+                (int) $activity->id,
+                $memberuserid,
+                (int) $journey->id
+            ));
         }
-        $membershipid = attendancejourneys_assign_journey_member($context, $journey, (int) $data->userid);
-        \mod_attendancejourneys\event\journey_member_added::create([
-            'objectid' => $membershipid, 'context' => $context, 'relateduserid' => (int) $data->userid,
-            'other' => ['attendancejourneysid' => (int) $activity->id, 'journeyid' => (int) $journey->id],
-        ])->trigger();
-        attendancejourneys_update_completion($course, $cm, [(int) $data->userid]);
-        attendancejourneys_update_grades($activity, (int) $data->userid);
-        $message = attendancejourneys_get_string(
-            'journeyparticipantadded',
-            'attendancejourneys',
-            fullname($addable[(int) $data->userid])
-        );
-        $othernames = attendancejourneys_other_journey_names(
-            $context,
-            (int) $activity->id,
-            (int) $data->userid,
-            (int) $journey->id
-        );
+        $transaction->allow_commit();
+        attendancejourneys_update_completion($course, $cm, $userids);
+        foreach ($userids as $memberuserid) {
+            attendancejourneys_update_grades($activity, $memberuserid);
+        }
+        $message = get_string('journeyparticipantsadded', 'attendancejourneys', count($userids));
         if ($othernames) {
-            $message .= ' ' . get_string('otherjourneysnotice', 'attendancejourneys', implode(', ', $othernames));
+            $message .= ' ' . get_string('otherjourneysnotice', 'attendancejourneys', implode(', ', array_unique($othernames)));
         }
         redirect($url, $message, null, \core\output\notification::NOTIFY_SUCCESS);
     }
     echo $OUTPUT->header();
     attendancejourneys_print_navigation($cm, $context, 'journeys');
-    echo $OUTPUT->heading(attendancejourneys_get_string('addjourneyparticipant', 'attendancejourneys'));
+    echo $OUTPUT->heading(get_string('addjourneyparticipants', 'attendancejourneys'));
     echo $OUTPUT->notification(attendancejourneys_get_string('journeyaudienceedithelp', 'attendancejourneys'), 'info');
     if ($overcapacity) {
         echo $OUTPUT->notification(attendancejourneys_get_string('journeycapacityreachedwarning', 'attendancejourneys', (object) [
@@ -341,6 +347,12 @@ echo html_writer::div(html_writer::link(
     new moodle_url('/mod/attendancejourneys/journeys.php', ['id' => $cm->id]),
     '← ' . attendancejourneys_get_string('managejourneys', 'attendancejourneys')
 ), 'mb-3');
+if (in_array((int) $journey->audiencemode, [3, 4], true)) {
+    echo $OUTPUT->notification(get_string(
+        (int) $journey->audiencemode === 3 ? 'journeyaudiencepreparing' : 'journeyaudiencefrozenafterstart',
+        'attendancejourneys'
+    ), 'info');
+}
 if ((int) $journey->audiencemode === 1) {
     echo $OUTPUT->notification(get_string('journeyaudienceautomaticnotice', 'attendancejourneys'), 'info');
 }
@@ -417,7 +429,7 @@ if (!empty($journey->active)) {
     if ($audienceeditable) {
         echo html_writer::link(
             new moodle_url($url, ['action' => 'addmember']),
-            attendancejourneys_get_string('addjourneyparticipant', 'attendancejourneys'),
+            get_string('addjourneyparticipants', 'attendancejourneys'),
             ['class' => 'btn btn-outline-primary']
         );
         if (!empty($journey->waitlistenabled)) {

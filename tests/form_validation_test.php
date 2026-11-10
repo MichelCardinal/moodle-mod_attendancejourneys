@@ -21,6 +21,7 @@ namespace mod_attendancejourneys;
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\attempt_proposal::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\individual_obligation::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\journey::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\journey_member::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\obligation_confirmation::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\series_review::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\form\session::class)]
@@ -34,6 +35,7 @@ namespace mod_attendancejourneys;
  * @covers \mod_attendancejourneys\form\obligation_confirmation
  * @covers \mod_attendancejourneys\form\series_review
  * @covers \mod_attendancejourneys\form\session
+ * @covers \mod_attendancejourneys\form\journey_member
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -44,6 +46,22 @@ final class form_validation_test extends \advanced_testcase {
         $this->resetAfterTest();
         require_once(__DIR__ . '/../locallib.php');
         $this->setAdminUser();
+    }
+
+    /**
+     * A selection is validated as one batch against the available places.
+     */
+    public function test_multiple_members_respect_capacity_and_eligibility(): void {
+        $generator = $this->getDataGenerator();
+        $a = $generator->create_user();
+        $b = $generator->create_user();
+        $form = new \mod_attendancejourneys\form\journey_member(null, [
+            'participants' => [$a->id => $a, $b->id => $b], 'capacity' => 2, 'occupancy' => 1,
+        ]);
+        $this->assertSame([], $form->validation(['userids' => [$a->id]], []));
+        $this->assertArrayHasKey('allowovercapacity', $form->validation(['userids' => [$a->id, $b->id]], []));
+        $this->assertSame([], $form->validation(['userids' => [$a->id, $b->id], 'allowovercapacity' => 1], []));
+        $this->assertArrayHasKey('userids', $form->validation(['userids' => [0]], []));
     }
 
     /**

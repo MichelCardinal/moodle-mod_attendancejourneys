@@ -98,6 +98,15 @@ if (data_submitted() && confirm_sesskey()) {
             'timereviewed' => 0,
             'timemodified' => time(),
         ];
+        $transaction = $DB->start_delegated_transaction();
+        $preparing = attendancejourneys_get_preparing_journey((int) $session->journeyid, (int) $attendancejourneys->id);
+        if ($preparing) {
+            $audienceids = array_keys(attendancejourneys_get_journey_participants($context, $preparing));
+            if (!in_array((int) $USER->id, $audienceids, true)) {
+                throw new moodle_exception('journeyaudiencechanged', 'attendancejourneys');
+            }
+            attendancejourneys_freeze_journey_audience($context, $preparing, $audienceids);
+        }
         if ($existing) {
             $record->id = $existing->id;
             $DB->update_record('attendancejourneys_records', $record);
@@ -131,6 +140,7 @@ if (data_submitted() && confirm_sesskey()) {
             );
         }
         attendancejourneys_touch_session((int) $session->id);
+        $transaction->allow_commit();
         \mod_attendancejourneys\event\attendance_self_recorded::create([
             'objectid' => $session->id,
             'context' => $context,

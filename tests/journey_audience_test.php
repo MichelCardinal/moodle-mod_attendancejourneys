@@ -18,6 +18,9 @@ namespace mod_attendancejourneys;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\journey_grades::class)]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_preparing_journey')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_freeze_journey_audience')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_audience_signature')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_addable_journey_participants')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_journey_participants')]
@@ -25,6 +28,7 @@ namespace mod_attendancejourneys;
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journeys')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_report_journeys')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_audience_is_editable')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_completed_journey')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_applies_to_user')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_user_can_self_record_session')]
@@ -34,12 +38,16 @@ namespace mod_attendancejourneys;
  * @covers \mod_attendancejourneys\local\journey_grades
  * @covers ::attendancejourneys_assign_journey_member
  * @covers ::attendancejourneys_close_user_journey
+ * @covers ::attendancejourneys_audience_signature
+ * @covers ::attendancejourneys_freeze_journey_audience
+ * @covers ::attendancejourneys_get_preparing_journey
  * @covers ::attendancejourneys_get_addable_journey_participants
  * @covers ::attendancejourneys_get_journey_participants
  * @covers ::attendancejourneys_get_session_participants
  * @covers ::attendancejourneys_get_user_active_journeys
  * @covers ::attendancejourneys_get_user_report_journeys
  * @covers ::attendancejourneys_journey_audience_is_editable
+ * @covers ::attendancejourneys_reopen_completed_journey
  * @covers ::attendancejourneys_session_applies_to_user
  * @covers ::attendancejourneys_update_grades
  * @covers ::attendancejourneys_user_can_self_record_session
@@ -154,6 +162,66 @@ final class journey_audience_test extends \advanced_testcase {
         $this->assertCount(1, attendancejourneys_get_session_participants($context, $session));
         $this->assertTrue(attendancejourneys_session_applies_to_user($session, (int) $students[0]->id));
         $this->assertFalse(attendancejourneys_session_applies_to_user($session, (int) $students[1]->id));
+    }
+
+    /**
+     * Planned sessions read late enrolments until the roster is frozen.
+     */
+    public function test_tracking_journey_follows_enrolments_only_until_frozen(): void {
+        global $DB;
+        [$activity, $cm, $context, $students, $journey, $session] = $this->fixture(3);
+        $sessions = [$session];
+        for ($i = 2; $i <= 5; $i++) {
+            $next = clone $session;
+            unset($next->id);
+            $next->name = 'Planned session ' . $i;
+            $next->sessiondate = time() + $i * DAYSECS;
+            $next->id = $DB->insert_record('attendancejourneys_sessions', $next);
+            $sessions[] = $next;
+        }
+        $enrol = enrol_get_plugin('manual');
+        $instance = $DB->get_record('enrol', ['courseid' => $activity->course, 'enrol' => 'manual'], '*', MUST_EXIST);
+        foreach ($students as $student) {
+            $enrol->update_user_enrol($instance, $student->id, ENROL_USER_SUSPENDED);
+        }
+        $this->assertSame([], attendancejourneys_get_session_participants($context, $session));
+        $before = attendancejourneys_audience_signature([]);
+        foreach ($students as $student) {
+            $enrol->update_user_enrol($instance, $student->id, ENROL_USER_ACTIVE);
+        }
+        $course = get_course($activity->course);
+        for ($i = 0; $i < 18; $i++) {
+            $this->getDataGenerator()->create_and_enrol($course, 'student');
+        }
+        $ids = array_keys(attendancejourneys_get_journey_participants($context, $journey));
+        $this->assertCount(20, $ids);
+        $this->assertNotSame($before, attendancejourneys_audience_signature($ids));
+        foreach ($sessions as $planned) {
+            $this->assertCount(20, attendancejourneys_get_session_participants($context, $planned));
+        }
+        $this->assertFalse(attendancejourneys_journey_audience_is_editable($journey));
+        $preparing = attendancejourneys_get_preparing_journey((int) $journey->id, (int) $activity->id);
+        $this->assertNotNull($preparing);
+
+        $transaction = $DB->start_delegated_transaction();
+        attendancejourneys_freeze_journey_audience($context, $preparing, $ids);
+        $transaction->allow_commit();
+
+        $DB->set_field('attendancejourneys_journeys', 'active', 0, ['id' => $journey->id]);
+        $journey = $DB->get_record('attendancejourneys_journeys', ['id' => $journey->id], '*', MUST_EXIST);
+        attendancejourneys_reopen_completed_journey($journey, 2);
+        $late = $this->getDataGenerator()->create_user();
+        $this->getDataGenerator()->enrol_user($late->id, $activity->course, 'student');
+        $this->assertNull(attendancejourneys_get_preparing_journey((int) $journey->id, (int) $activity->id));
+        foreach ($sessions as $planned) {
+            $this->assertCount(20, attendancejourneys_get_session_participants($context, $planned));
+        }
+        $this->assertArrayNotHasKey($journey->id, attendancejourneys_get_user_active_journeys(
+            $context,
+            (int) $activity->id,
+            (int) $late->id
+        ));
+        $this->assertFalse(attendancejourneys_session_applies_to_user($session, (int) $late->id));
     }
 
     /**

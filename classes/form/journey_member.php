@@ -21,7 +21,7 @@ require_once($CFG->dirroot . '/mod/attendancejourneys/locallib.php');
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form for explicitly adding one participant to a journey before attendance begins.
+ * Form for explicitly adding participants to a journey before attendance begins.
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -41,11 +41,15 @@ class journey_member extends \moodleform {
         foreach ($this->_customdata['participants'] as $participant) {
             $options[$participant->id] = fullname($participant);
         }
-        $mform->addElement('select', 'userid', attendancejourneys_get_string('participant', 'attendancejourneys'), $options);
-        $mform->addHelpButton('userid', 'journeyparticipant', 'attendancejourneys');
-        $mform->setType('userid', PARAM_INT);
-        $mform->addRule('userid', null, 'required', null, 'client');
-        if (!empty($this->_customdata['overcapacity'])) {
+        $mform->addElement(
+            'autocomplete',
+            'userids',
+            get_string('participants', 'attendancejourneys'),
+            $options,
+            ['multiple' => true]
+        );
+        $mform->setType('userids', PARAM_INT);
+        if (!empty($this->_customdata['capacity'])) {
             $mform->addElement(
                 'advcheckbox',
                 'allowovercapacity',
@@ -53,7 +57,7 @@ class journey_member extends \moodleform {
             );
             $mform->addHelpButton('allowovercapacity', 'journeyallowmemberovercapacity', 'attendancejourneys');
         }
-        $this->add_action_buttons(true, attendancejourneys_get_string('addjourneyparticipant', 'attendancejourneys'));
+        $this->add_action_buttons(true, get_string('addjourneyparticipants', 'attendancejourneys'));
     }
 
     /**
@@ -65,8 +69,17 @@ class journey_member extends \moodleform {
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        if (!empty($this->_customdata['overcapacity']) && empty($data['allowovercapacity'])) {
-            $errors['allowovercapacity'] = attendancejourneys_get_string('journeycapacityoverrideconfirm', 'attendancejourneys');
+        $userids = array_unique(array_map('intval', (array) ($data['userids'] ?? [])));
+        if (!$userids) {
+            $errors['userids'] = get_string('required');
+        } else if (array_diff($userids, array_keys($this->_customdata['participants']))) {
+            $errors['userids'] = get_string('invaliduser', 'error');
+        }
+        $capacity = (int) $this->_customdata['capacity'];
+        if (
+            $capacity && $this->_customdata['occupancy'] + count($userids) > $capacity && empty($data['allowovercapacity'])
+        ) {
+            $errors['allowovercapacity'] = get_string('journeybulkcapacityoverrideconfirm', 'attendancejourneys');
         }
         return $errors;
     }

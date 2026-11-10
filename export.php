@@ -372,9 +372,9 @@ if ($scope === 'journeydetail') {
     }
     // Keep preloaded audience decisions consistent with the explicit journey mode.
     foreach ($journeysbyid as $audiencejourney) {
-        if ((int) $audiencejourney->audiencemode === 1) {
+        if (in_array((int) $audiencejourney->audiencemode, [1, 3], true)) {
             unset($membersbyjourney[(int) $audiencejourney->id]);
-        } else if ((int) $audiencejourney->audiencemode === 2) {
+        } else if (in_array((int) $audiencejourney->audiencemode, [2, 4], true)) {
             $membersbyjourney[(int) $audiencejourney->id] = $membersbyjourney[(int) $audiencejourney->id] ?? [];
         }
     }

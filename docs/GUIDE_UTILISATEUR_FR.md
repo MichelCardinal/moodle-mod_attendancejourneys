@@ -221,3 +221,9 @@ Cette section spécialisée se trouve vers la fin des paramètres et demeure rep
 ## Aide intégrée
 
 L’onglet **Aide** de l’activité donne accès à ce guide et aux documents permis par votre rôle. La langue est choisie automatiquement selon votre interface Moodle et les termes personnalisés de l’activité sont appliqués à la documentation affichée.
+
+### Préparer un parcours avant les inscriptions
+
+Pour un nouveau parcours qui couvre tout le cours, cochez **Suivre les inscriptions au cours jusqu’à la première prise de présences**. Vous pouvez planifier les séances sans aucun inscrit. La liste suit les inscriptions actives admissibles jusqu’au premier enregistrement d’une présence ou d’un résultat final. Un groupe, une limite de places ou une liste d’attente nécessite une gestion manuelle.
+
+Pour un parcours à liste manuelle, ouvrez **Parcours → votre parcours → Ajouter des participants** avant d’enregistrer les présences. Recherchez et sélectionnez plusieurs étudiants, puis enregistrez une seule fois. L’ajout s’applique aux séances déjà planifiées.

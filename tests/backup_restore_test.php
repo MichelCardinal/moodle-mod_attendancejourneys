@@ -57,6 +57,19 @@ final class backup_restore_test extends \advanced_testcase {
         $this->assertSame('Séances', $restored['sessiontermplural']);
     }
 
+    /**
+     * A frozen enrolment list stays fixed with history, while a clean copy follows its own course.
+     */
+    public function test_restore_tracking_journey_with_and_without_user_data(): void {
+        $withhistory = $this->backup_and_restore_fixture(true, true, false, 0, 4);
+        $this->assertSame(4, $withhistory['audiencemode']);
+        $this->assertSame(1, $withhistory['members']);
+        $structure = $this->backup_and_restore_fixture(false, true, false, 0, 4);
+        $this->assertSame(3, $structure['audiencemode']);
+        $this->assertSame(0, $structure['members']);
+        $this->assertSame(1, $structure['journeyactive']);
+    }
+
     public function test_restore_without_user_data_keeps_structure_and_reopens_the_journey(): void {
         $restored = $this->backup_and_restore_fixture(false);
         $this->assertSame(1, $restored['journeys']);
@@ -129,13 +142,15 @@ final class backup_restore_test extends \advanced_testcase {
      * @param bool $journeygrading Whether to include a separate journey grade item.
      * @param bool $multijourney Whether to include two independently graded obligations.
      * @param int $dateoffset Requested course start-date offset in seconds.
+     * @param int $audiencemode Source journey audience mode.
      * @return array
      */
     private function backup_and_restore_fixture(
         bool $userdata,
         bool $journeygrading = false,
         bool $multijourney = false,
-        int $dateoffset = 0
+        int $dateoffset = 0,
+        int $audiencemode = 2
     ): array {
         global $CFG, $DB, $USER;
         $this->resetAfterTest();
@@ -157,9 +172,10 @@ final class backup_restore_test extends \advanced_testcase {
         $journeydata = (object) [
             'attendancejourneysid' => $activity->id, 'name' => 'Backup journey', 'description' => '', 'groupid' => 0,
             'startdate' => time() - DAYSECS, 'enddate' => time() + DAYSECS,
-            'defaultmodality' => 'hybrid', 'capacity' => 12, 'waitlistenabled' => 1,
+            'defaultmodality' => 'hybrid',
+            'capacity' => $audiencemode === 4 ? 0 : 12, 'waitlistenabled' => $audiencemode === 4 ? 0 : 1,
             'passinggrade' => $multijourney ? 60 : 65.5,
-            'audiencemode' => 2,
+            'audiencemode' => $audiencemode,
             'active' => 0, 'completedby' => $staff->id,
             'timecompleted' => time(), 'timecreated' => time(), 'timemodified' => time(),
         ];

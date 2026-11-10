@@ -197,6 +197,9 @@ class restore_attendancejourneys_activity_structure_step extends restore_activit
             $data->active = 1;
             $data->completedby = 0;
             $data->timecompleted = 0;
+            if ($data->audiencemode === 4) {
+                $data->audiencemode = 3;
+            }
         }
         $oldroot = (int) ($data->rootjourneyid ?? 0);
         $data->rootjourneyid = 0;

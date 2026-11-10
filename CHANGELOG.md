@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 (development)
+
+- Follow course enrolments before attendance starts, add multiple participants at once, and align the terminology columns.
+
+
 ## 1.1.0 — 2026-10-08
 
 Promote the validated RC12 as the first public stable release. Technical version 2026100807; no schema, calculation, grade or permission changes. Add the native metadata-only savepoint and public repository/support links. Order English string keys without changing values and declare actual PHPUnit coverage targets for current Moodle coding checks. Earlier entries record unpublished development.

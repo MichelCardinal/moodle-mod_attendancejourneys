@@ -1,5 +1,10 @@
 # Registro de cambios
 
+## 1.2.0 (development)
+
+- Seguimiento de matrículas antes de registrar asistencia, incorporación múltiple y alineación de las columnas de terminología.
+
+
 ## 1.1.0 — 2026-10-08
 
 Primera versión pública estable basada en RC12 validada. Versión técnica 2026100807; sin cambios de esquema, cálculo, calificación o permisos. Punto de actualización nativo sin cambios pedagógicos y enlaces públicos de código y soporte. Las entradas anteriores describen desarrollo no publicado.

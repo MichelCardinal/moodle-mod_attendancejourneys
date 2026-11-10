@@ -786,10 +786,10 @@ function attendancejourneys_journey_has_fixed_audience(stdClass $journey): bool 
     }
     $mode = isset($journey->audiencemode) ? (int) $journey->audiencemode :
         (int) $DB->get_field('attendancejourneys_journeys', 'audiencemode', ['id' => $journey->id], MUST_EXIST);
-    if ($mode === 1) {
+    if (in_array($mode, [1, 3], true)) {
         return false;
     }
-    if ($mode === 2) {
+    if (in_array($mode, [2, 4], true)) {
         return true;
     }
     return $DB->record_exists('attendancejourneys_members', ['journeyid' => $journey->id]);
@@ -853,6 +853,51 @@ function attendancejourneys_assign_journey_members(context_module $context, stdC
 }
 
 /**
+ * Returns a journey whose audience still follows enrolments before its first recording.
+ *
+ * @param int $journeyid Journey identifier.
+ * @param int $activityid Activity identifier.
+ * @return stdClass|null The preparing journey, if any.
+ */
+function attendancejourneys_get_preparing_journey(int $journeyid, int $activityid): ?stdClass {
+    global $DB;
+    if (!$journeyid) {
+        return null;
+    }
+    return $DB->get_record('attendancejourneys_journeys', [
+        'id' => $journeyid, 'attendancejourneysid' => $activityid, 'audiencemode' => 3, 'active' => 1,
+    ]) ?: null;
+}
+
+/**
+ * Saves the initial audience as explicit memberships before the first attendance or closure.
+ *
+ * Call inside the transaction that records attendance or closes a result, with the activity write lock held.
+ *
+ * @param context_module $context Activity context.
+ * @param stdClass $journey Preparing journey.
+ * @param int[] $userids Eligible participants read from Moodle for this operation.
+ */
+function attendancejourneys_freeze_journey_audience(context_module $context, stdClass $journey, array $userids): void {
+    global $DB;
+    foreach ($userids as $userid) {
+        attendancejourneys_assign_journey_member($context, $journey, (int) $userid, false);
+    }
+    $DB->set_field('attendancejourneys_journeys', 'audiencemode', 4, ['id' => $journey->id]);
+}
+
+/**
+ * Fingerprints the roster of a preparing journey without exposing user IDs.
+ *
+ * @param int[] $userids Eligible user identifiers.
+ * @return string Roster signature.
+ */
+function attendancejourneys_audience_signature(array $userids): string {
+    sort($userids, SORT_NUMERIC);
+    return hash('sha256', implode(',', $userids));
+}
+
+/**
  * Assigns one actively enrolled participant to a journey and returns the membership ID.
  *
  * @param context_module $context Activity context.
@@ -911,7 +956,8 @@ function attendancejourneys_journey_audience_is_editable(stdClass $journey): boo
     if (empty($journey->active)) {
         return false;
     }
-    if ((int) $DB->get_field('attendancejourneys_journeys', 'audiencemode', ['id' => $journey->id], MUST_EXIST) === 1) {
+    $mode = (int) $DB->get_field('attendancejourneys_journeys', 'audiencemode', ['id' => $journey->id], MUST_EXIST);
+    if (in_array($mode, [1, 3, 4], true)) {
         return false;
     }
     $sql = "SELECT 1
@@ -934,8 +980,9 @@ function attendancejourneys_get_addable_journey_participants(context_module $con
     if ((int) $journey->attendancejourneysid !== (int) $cm->instance) {
         throw new coding_exception('The journey does not belong to this activity.');
     }
-    if ((int) $DB->get_field('attendancejourneys_journeys', 'audiencemode', ['id' => $journey->id], MUST_EXIST) === 1) {
-        // Every eligible enrolled participant already belongs to this automatic audience.
+    $mode = (int) $DB->get_field('attendancejourneys_journeys', 'audiencemode', ['id' => $journey->id], MUST_EXIST);
+    if (in_array($mode, [1, 3, 4], true)) {
+        // These modes are managed by enrolments or have already frozen their audience.
         return [];
     }
     $multiple = (bool) $DB->get_field('attendancejourneys', 'journeygrading', ['id' => $cm->instance], MUST_EXIST);
@@ -1051,7 +1098,7 @@ function attendancejourneys_get_user_active_journeys(
         ) as $journey
     ) {
         $mode = (int) $journey->audiencemode;
-        if ($mode === 2 || ($mode === 0 && !$legacyfallback)) {
+        if (in_array($mode, [2, 4], true) || ($mode === 0 && !$legacyfallback)) {
             continue;
         }
         if (empty($journey->groupid) || groups_is_member((int) $journey->groupid, $userid)) {
@@ -1690,6 +1737,18 @@ function attendancejourneys_close_user_journey(
     if ($blocker) {
         throw new moodle_exception($blocker[0], 'attendancejourneys', '', $blocker[1]);
     }
+    $preparing = attendancejourneys_get_preparing_journey($journeyid, (int) $attendancejourneys->id);
+    $transaction = null;
+    if ($preparing) {
+        $cm = get_coursemodule_from_instance('attendancejourneys', $attendancejourneys->id, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+        $audienceids = array_keys(attendancejourneys_get_journey_participants($context, $preparing));
+        if (!in_array($userid, $audienceids, true)) {
+            throw new moodle_exception('journeyaudiencechanged', 'attendancejourneys');
+        }
+        $transaction = $DB->start_delegated_transaction();
+        attendancejourneys_freeze_journey_audience($context, $preparing, $audienceids);
+    }
     if (!empty($attendancejourneys->journeygrading) && $journeyid) {
         $thresholds = $DB->get_records('attendancejourneys_closures', [
             'attendancejourneysid' => $attendancejourneys->id, 'journeyid' => $journeyid, 'active' => 1,
@@ -1748,6 +1807,9 @@ function attendancejourneys_close_user_journey(
         $event->add_record_snapshot('attendancejourneys_closures', $record);
         $event->trigger();
     }
+    if ($transaction !== null) {
+        $transaction->allow_commit();
+    }
     return $record;
 }
 
@@ -1770,6 +1832,7 @@ function attendancejourneys_complete_journey(
         return [];
     }
     $participants = attendancejourneys_get_journey_participants($context, $journey);
+    $audienceids = array_keys($participants);
     if (!empty($attendancejourneys->journeygrading)) {
         $participants = array_filter($participants, static fn($participant) =>
             empty(\mod_attendancejourneys\local\individual_obligation::get((int) $journey->id, (int) $participant->id)->waived));
@@ -1799,6 +1862,10 @@ function attendancejourneys_complete_journey(
     }
     $closed = [];
     $transaction = $DB->start_delegated_transaction();
+    if ((int) $journey->audiencemode === 3) {
+        attendancejourneys_freeze_journey_audience($context, $journey, $audienceids);
+        $journey->audiencemode = 4;
+    }
     foreach (array_keys($participants) as $userid) {
         if (!is_enrolled($context, (int) $userid, 'mod/attendancejourneys:canbelisted', true)) {
             continue;

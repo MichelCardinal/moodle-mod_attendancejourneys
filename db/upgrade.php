@@ -1563,5 +1563,10 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026100807, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026111000) {
+        // New audience modes are opt-in and use the existing audiencemode field.
+        upgrade_mod_savepoint(true, 2026111000, 'attendancejourneys');
+    }
+
     return true;
 }
