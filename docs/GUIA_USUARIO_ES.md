@@ -227,3 +227,5 @@ La pestaña **Ayuda** de la actividad ofrece esta guía y los documentos permiti
 En un itinerario nuevo para todo el curso, seleccione **Seguir las matriculaciones hasta que se registre la asistencia**. Puede planificar sesiones sin participantes matriculados. La lista sigue las matriculaciones activas elegibles hasta que se guarda la primera asistencia o un resultado final. Si usa un grupo, un límite de plazas o una lista de espera, gestione la lista manualmente.
 
 En un itinerario manual, abra **Itinerarios → su itinerario → Añadir participantes** antes de registrar la asistencia. Busque y seleccione a varias personas y guarde una sola vez. Se añadirán a las sesiones ya planificadas.
+
+Para corregir la lista, elija **Retirar participantes** en el apartado de progreso del itinerario, seleccione a las personas y confirme una sola vez. Esta acción está disponible mientras el itinerario manual esté abierto y no tenga asistencias ni resultados finales guardados. Las personas retiradas conservan su matrícula en el curso y sus grupos de Moodle.

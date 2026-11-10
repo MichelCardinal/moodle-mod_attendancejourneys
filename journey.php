@@ -206,7 +206,8 @@ if (in_array($action, ['promotewaitlist', 'removewaitlist'], true) && $waitlisti
     exit;
 }
 
-if ($action === 'addmember') {
+if (in_array($action, ['addmember', 'removemembers'], true)) {
+    $removing = $action === 'removemembers';
     if (!$audienceeditable) {
         redirect(
             $url,
@@ -215,21 +216,31 @@ if ($action === 'addmember') {
             \core\output\notification::NOTIFY_ERROR
         );
     }
-    $addable = attendancejourneys_get_addable_journey_participants($context, $journey);
-    if (!$addable) {
+    $candidates = $removing ? array_intersect_key(
+        attendancejourneys_get_journey_participants(
+            $context,
+            $journey,
+            'u.id,u.firstname,u.lastname,u.firstnamephonetic,u.lastnamephonetic,u.middlename,u.alternatename'
+        ),
+        $visibleparticipants
+    ) : attendancejourneys_get_addable_journey_participants($context, $journey);
+    if (!$candidates) {
         redirect(
             $url,
-            attendancejourneys_get_string('noaddablejourneyparticipants', 'attendancejourneys'),
+            attendancejourneys_get_string(
+                $removing ? 'noremovablejourneyparticipants' : 'noaddablejourneyparticipants',
+                'attendancejourneys'
+            ),
             null,
             \core\output\notification::NOTIFY_INFO
         );
     }
-    $currentoccupancy = count(attendancejourneys_get_journey_participants($context, $journey));
-    $overcapacity = !empty($journey->capacity) && $currentoccupancy >= (int) $journey->capacity;
-    $formurl = new moodle_url($url, ['action' => 'addmember']);
+    $capacity = $removing ? 0 : (int) $journey->capacity;
+    $currentoccupancy = $capacity ? count(attendancejourneys_get_journey_participants($context, $journey)) : 0;
+    $formurl = new moodle_url($url, ['action' => $action]);
     $form = new \mod_attendancejourneys\form\journey_member(
         $formurl,
-        ['participants' => $addable, 'capacity' => (int) $journey->capacity, 'occupancy' => $currentoccupancy]
+        ['participants' => $candidates, 'capacity' => $capacity, 'occupancy' => $currentoccupancy, 'removing' => $removing]
     );
     $form->set_data((object) ['id' => $cm->id, 'journeyid' => $journey->id]);
     if ($form->is_cancelled()) {
@@ -237,6 +248,21 @@ if ($action === 'addmember') {
     }
     if ($data = $form->get_data()) {
         $userids = array_values(array_unique(array_map('intval', $data->userids)));
+        if ($removing) {
+            $transaction = $DB->start_delegated_transaction();
+            attendancejourneys_remove_journey_members($context, $journey, $userids);
+            attendancejourneys_update_completion($course, $cm, $userids);
+            foreach ($userids as $memberuserid) {
+                attendancejourneys_update_grades($activity, $memberuserid);
+            }
+            $transaction->allow_commit();
+            redirect(
+                $url,
+                get_string('journeyparticipantsremoved', 'attendancejourneys', count($userids)),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        }
         $transaction = $DB->start_delegated_transaction();
         $othernames = [];
         foreach ($userids as $memberuserid) {
@@ -266,9 +292,12 @@ if ($action === 'addmember') {
     }
     echo $OUTPUT->header();
     attendancejourneys_print_navigation($cm, $context, 'journeys');
-    echo $OUTPUT->heading(get_string('addjourneyparticipants', 'attendancejourneys'));
-    echo $OUTPUT->notification(attendancejourneys_get_string('journeyaudienceedithelp', 'attendancejourneys'), 'info');
-    if ($overcapacity) {
+    echo $OUTPUT->heading(get_string($removing ? 'removejourneyparticipants' : 'addjourneyparticipants', 'attendancejourneys'));
+    echo $OUTPUT->notification(attendancejourneys_get_string(
+        $removing ? 'removejourneyparticipantshelp' : 'journeyaudienceedithelp',
+        'attendancejourneys'
+    ), 'info');
+    if ($capacity && $currentoccupancy >= $capacity) {
         echo $OUTPUT->notification(attendancejourneys_get_string('journeycapacityreachedwarning', 'attendancejourneys', (object) [
             'count' => $currentoccupancy, 'capacity' => (int) $journey->capacity,
         ]), 'warning');
@@ -287,19 +316,11 @@ if ($action === 'removemember' && $userid) {
             \core\output\notification::NOTIFY_ERROR
         );
     }
-    $membership = $DB->get_record('attendancejourneys_members', [
-        'journeyid' => $journey->id, 'userid' => $userid,
-    ], '*', MUST_EXIST);
+    $DB->get_record('attendancejourneys_members', ['journeyid' => $journey->id, 'userid' => $userid], 'id', MUST_EXIST);
     $member = core_user::get_user($userid, '*', MUST_EXIST);
     if ($confirm) {
         require_sesskey();
-        $event = \mod_attendancejourneys\event\journey_member_removed::create([
-            'objectid' => $membership->id, 'context' => $context, 'relateduserid' => $userid,
-            'other' => ['attendancejourneysid' => (int) $activity->id, 'journeyid' => (int) $journey->id],
-        ]);
-        $event->add_record_snapshot('attendancejourneys_members', $membership);
-        $DB->delete_records('attendancejourneys_members', ['id' => $membership->id]);
-        $event->trigger();
+        attendancejourneys_remove_journey_members($context, $journey, [$userid]);
         attendancejourneys_update_completion($course, $cm, [$userid]);
         attendancejourneys_update_grades($activity, $userid);
         redirect(
@@ -608,6 +629,13 @@ echo html_writer::tag('h3', attendancejourneys_get_string('journeyparticipantpro
 if (!$participants) {
     echo $OUTPUT->notification(attendancejourneys_get_string('noparticipants', 'attendancejourneys'), 'info');
 } else {
+    if ($audienceeditable && array_intersect_key($participants, $membershipsbyuser)) {
+        echo html_writer::div(html_writer::link(
+            new moodle_url($url, ['action' => 'removemembers']),
+            get_string('removejourneyparticipants', 'attendancejourneys'),
+            ['class' => 'btn btn-secondary']
+        ), 'mb-3');
+    }
     $participanttable = new html_table();
     $participanttable->head = [attendancejourneys_get_string(
         'participant',

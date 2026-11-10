@@ -28,6 +28,7 @@ namespace mod_attendancejourneys;
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_active_journeys')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_get_user_report_journeys')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_journey_audience_is_editable')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_remove_journey_members')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_reopen_completed_journey')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_session_applies_to_user')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_update_grades')]
@@ -47,6 +48,7 @@ namespace mod_attendancejourneys;
  * @covers ::attendancejourneys_get_user_active_journeys
  * @covers ::attendancejourneys_get_user_report_journeys
  * @covers ::attendancejourneys_journey_audience_is_editable
+ * @covers ::attendancejourneys_remove_journey_members
  * @covers ::attendancejourneys_reopen_completed_journey
  * @covers ::attendancejourneys_session_applies_to_user
  * @covers ::attendancejourneys_update_grades
@@ -162,6 +164,78 @@ final class journey_audience_test extends \advanced_testcase {
         $this->assertCount(1, attendancejourneys_get_session_participants($context, $session));
         $this->assertTrue(attendancejourneys_session_applies_to_user($session, (int) $students[0]->id));
         $this->assertFalse(attendancejourneys_session_applies_to_user($session, (int) $students[1]->id));
+    }
+
+    /**
+     * A batch only removes members from the selected journey and leaves course enrolments in place.
+     */
+    public function test_remove_journey_members_keeps_other_journeys_and_enrolments(): void {
+        global $DB;
+        [$activity, $cm, $context, $students, $journey, $session] = $this->fixture(2);
+        $otherid = $DB->insert_record('attendancejourneys_journeys', (object) [
+            'attendancejourneysid' => $activity->id, 'name' => 'Other journey', 'audiencemode' => 2,
+        ]);
+        $other = $DB->get_record('attendancejourneys_journeys', ['id' => $otherid], '*', MUST_EXIST);
+        $userids = array_map(static fn($student) => (int) $student->id, $students);
+        foreach ($userids as $userid) {
+            attendancejourneys_assign_journey_member($context, $journey, $userid);
+        }
+        attendancejourneys_assign_journey_member($context, $other, $userids[0]);
+
+        $sink = $this->redirectEvents();
+        attendancejourneys_remove_journey_members($context, $journey, $userids);
+        $events = $sink->get_events();
+        $sink->close();
+        $this->assertCount(2, $events);
+        foreach ($events as $event) {
+            $this->assertInstanceOf(\mod_attendancejourneys\event\journey_member_removed::class, $event);
+            $this->assertEquals($journey->id, $event->other['journeyid']);
+        }
+        $this->assertEqualsCanonicalizing($userids, array_column($events, 'relateduserid'));
+        $this->assertSame([], attendancejourneys_get_session_participants($context, $session));
+        $this->assertArrayHasKey($userids[0], attendancejourneys_get_journey_participants($context, $other));
+        foreach ($userids as $userid) {
+            $this->assertTrue(is_enrolled($context, $userid, '', true));
+        }
+    }
+
+    /**
+     * A selection containing a stale or unrelated ID must not remove valid members.
+     */
+    public function test_remove_journey_members_rejects_invalid_selection_atomically(): void {
+        global $DB;
+        [, , $context, $students, $journey] = $this->fixture(2);
+        $userid = (int) $students[0]->id;
+        $membershipid = attendancejourneys_assign_journey_member($context, $journey, $userid);
+        try {
+            attendancejourneys_remove_journey_members($context, $journey, [$userid, (int) $students[1]->id]);
+            $this->fail('Expected an invalid participant error.');
+        } catch (\moodle_exception $exception) {
+            $this->assertSame('invaliduser', $exception->errorcode);
+        }
+        $this->assertTrue($DB->record_exists('attendancejourneys_members', ['id' => $membershipid]));
+    }
+
+    /**
+     * A saved attendance record locks the whole journey, even for members without their own marks.
+     */
+    public function test_remove_journey_members_rejects_a_journey_with_attendance(): void {
+        global $DB;
+        [, , $context, $students, $journey, $session] = $this->fixture(2);
+        $userids = array_map(static fn($student) => (int) $student->id, $students);
+        foreach ($userids as $userid) {
+            attendancejourneys_assign_journey_member($context, $journey, $userid);
+        }
+        $DB->insert_record('attendancejourneys_records', (object) [
+            'sessionid' => $session->id, 'userid' => $userids[0], 'status' => 'present',
+        ]);
+        try {
+            attendancejourneys_remove_journey_members($context, $journey, [$userids[1]]);
+            $this->fail('Expected the attendance history to lock removals.');
+        } catch (\coding_exception $exception) {
+            $this->assertStringContainsString('The journey audience cannot be edited', $exception->getMessage());
+        }
+        $this->assertCount(2, attendancejourneys_get_journey_participants($context, $journey));
     }
 
     /**

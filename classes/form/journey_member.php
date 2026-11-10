@@ -21,7 +21,7 @@ require_once($CFG->dirroot . '/mod/attendancejourneys/locallib.php');
 require_once($CFG->libdir . '/formslib.php');
 
 /**
- * Form for explicitly adding participants to a journey before attendance begins.
+ * Form for adding or removing participants to a journey before attendance begins.
  * @package mod_attendancejourneys
  * @copyright 2026 Michel Cardinal
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -33,6 +33,7 @@ class journey_member extends \moodleform {
      */
     public function definition() {
         $mform = $this->_form;
+        $removing = !empty($this->_customdata['removing']);
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'journeyid');
@@ -57,7 +58,17 @@ class journey_member extends \moodleform {
             );
             $mform->addHelpButton('allowovercapacity', 'journeyallowmemberovercapacity', 'attendancejourneys');
         }
-        $this->add_action_buttons(true, get_string('addjourneyparticipants', 'attendancejourneys'));
+        if ($removing) {
+            $mform->addElement(
+                'advcheckbox',
+                'confirmremoval',
+                get_string('confirmjourneyparticipantsremoval', 'attendancejourneys')
+            );
+        }
+        $this->add_action_buttons(
+            true,
+            get_string($removing ? 'removejourneyparticipants' : 'addjourneyparticipants', 'attendancejourneys')
+        );
     }
 
     /**
@@ -69,11 +80,17 @@ class journey_member extends \moodleform {
      */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        $userids = array_unique(array_map('intval', (array) ($data['userids'] ?? [])));
-        if (!$userids) {
+        $removing = !empty($this->_customdata['removing']);
+        // Reject the whole removal if Moodle has filtered any unavailable options out of the selection.
+        $selected = $removing ? $this->_form->getSubmitValue('userids') : ($data['userids'] ?? []);
+        $userids = array_unique(array_map('intval', (array) $selected));
+        if (empty($data['userids'])) {
             $errors['userids'] = get_string('required');
         } else if (array_diff($userids, array_keys($this->_customdata['participants']))) {
             $errors['userids'] = get_string('invaliduser', 'error');
+        }
+        if ($removing && empty($data['confirmremoval'])) {
+            $errors['confirmremoval'] = get_string('required');
         }
         $capacity = (int) $this->_customdata['capacity'];
         if (

@@ -2,10 +2,11 @@
 
 ## 1.2.0
 
-Build 2026111001. Supports Moodle 4.5–5.3.
+Build 2026111002. Supports Moodle 4.5–5.3.
 
 - Plan sessions before participants enrol. A new journey can follow active course enrolments until attendance is first saved or a final result is recorded.
 - Add several participants to a manual journey in one submission.
+- Remove several participants from an open manual journey in one confirmed action before saving any attendance or final result.
 - Align the singular and plural labels with their terminology fields, including on small screens.
 - Existing journeys keep their enrolment behaviour and attendance history.
 

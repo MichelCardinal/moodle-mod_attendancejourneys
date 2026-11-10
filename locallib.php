@@ -969,6 +969,43 @@ function attendancejourneys_journey_audience_is_editable(stdClass $journey): boo
 }
 
 /**
+ * Removes a selection from a manual journey and records each removal in Moodle's log.
+ *
+ * The caller must hold the activity write lock and check access to the journey and participants.
+ *
+ * @param context_module $context Activity context.
+ * @param stdClass $journey Journey record.
+ * @param int[] $userids Unique participant IDs.
+ */
+function attendancejourneys_remove_journey_members(context_module $context, stdClass $journey, array $userids): void {
+    global $DB;
+
+    if (!$userids || !attendancejourneys_journey_audience_is_editable($journey)) {
+        throw new coding_exception('The journey audience cannot be edited.');
+    }
+    [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+    $params['journeyid'] = $journey->id;
+    $memberships = $DB->get_records_select('attendancejourneys_members', "journeyid = :journeyid AND userid $insql", $params);
+    if (count($memberships) !== count($userids)) {
+        throw new moodle_exception('invaliduser', 'error');
+    }
+
+    $transaction = $DB->start_delegated_transaction();
+    foreach ($memberships as $membership) {
+        $event = \mod_attendancejourneys\event\journey_member_removed::create([
+            'objectid' => (int) $membership->id,
+            'context' => $context,
+            'relateduserid' => (int) $membership->userid,
+            'other' => ['attendancejourneysid' => (int) $journey->attendancejourneysid, 'journeyid' => (int) $journey->id],
+        ]);
+        $event->add_record_snapshot('attendancejourneys_members', $membership);
+        $DB->delete_records('attendancejourneys_members', ['id' => $membership->id]);
+        $event->trigger();
+    }
+    $transaction->allow_commit();
+}
+
+/**
  * Returns active enrolled users who may safely be added to a journey.
  *
  * @param context_module $context Activity context.

@@ -1573,5 +1573,10 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026111001, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026111002) {
+        // Bulk removal uses the existing journey membership records.
+        upgrade_mod_savepoint(true, 2026111002, 'attendancejourneys');
+    }
+
     return true;
 }

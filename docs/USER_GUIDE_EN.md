@@ -225,3 +225,5 @@ The activity’s **Help** tab provides this guide and the documents permitted fo
 For a new journey covering the whole course, select **Follow course enrolments until attendance starts**. You can plan sessions with no students enrolled. The journey follows active, eligible enrolments until the first attendance record or final result is saved. A group, capacity limit or waiting list requires manual management.
 
 For a manual journey, open **Journeys → your journey → Add participants** before recording attendance. Search for and select several eligible students, then save once. The additions apply to all sessions already in the journey.
+
+To correct the list, choose **Remove participants** under **Participant progress**, select everyone to remove and confirm once. This is available while the manual journey is open and has no saved attendance or final results. Participants keep their course enrolments and Moodle groups.

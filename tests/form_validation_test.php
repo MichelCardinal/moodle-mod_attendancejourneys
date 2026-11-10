@@ -65,6 +65,33 @@ final class form_validation_test extends \advanced_testcase {
     }
 
     /**
+     * Removal needs confirmation and rejects a selection if any participant is no longer available.
+     */
+    public function test_bulk_removal_requires_confirmation_and_a_current_selection(): void {
+        $generator = $this->getDataGenerator();
+        $first = $generator->create_user();
+        $second = $generator->create_user();
+        $customdata = [
+            'participants' => [$first->id => $first, $second->id => $second],
+            'capacity' => 0,
+            'occupancy' => 0,
+            'removing' => true,
+        ];
+        $selection = ['userids' => [$first->id, $second->id]];
+        \mod_attendancejourneys\form\journey_member::mock_submit($selection);
+        $form = new \mod_attendancejourneys\form\journey_member(null, $customdata);
+        $this->assertNull($form->get_data());
+
+        \mod_attendancejourneys\form\journey_member::mock_submit($selection + ['confirmremoval' => 1]);
+        $form = new \mod_attendancejourneys\form\journey_member(null, $customdata);
+        $this->assertEquals($selection['userids'], $form->get_data()->userids);
+
+        unset($customdata['participants'][$second->id]);
+        $form = new \mod_attendancejourneys\form\journey_member(null, $customdata);
+        $this->assertNull($form->get_data());
+    }
+
+    /**
      * Retake proposals require explicit details and use a distinct confirmation form.
      */
     public function test_attempt_forms_require_details_and_separate_confirmation(): void {

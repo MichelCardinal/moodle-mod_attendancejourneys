@@ -227,3 +227,5 @@ L’onglet **Aide** de l’activité donne accès à ce guide et aux documents p
 Pour un nouveau parcours qui couvre tout le cours, cochez **Suivre les inscriptions au cours jusqu’à la première prise de présences**. Vous pouvez planifier les séances sans aucun inscrit. La liste suit les inscriptions actives admissibles jusqu’au premier enregistrement d’une présence ou d’un résultat final. Un groupe, une limite de places ou une liste d’attente nécessite une gestion manuelle.
 
 Pour un parcours à liste manuelle, ouvrez **Parcours → votre parcours → Ajouter des participants** avant d’enregistrer les présences. Recherchez et sélectionnez plusieurs étudiants, puis enregistrez une seule fois. L’ajout s’applique aux séances déjà planifiées.
+
+Pour corriger la liste, cliquez sur **Retirer des participants** sous **Progression des participants**, sélectionnez les personnes à retirer et confirmez une seule fois. Cette action est disponible tant que le parcours manuel est ouvert et ne contient aucune présence ni aucun résultat final. Les personnes retirées restent inscrites au cours et conservent leurs groupes Moodle.
