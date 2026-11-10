@@ -1563,5 +1563,25 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026100807, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026111000) {
+        // New audience modes are opt-in and use the existing audiencemode field.
+        upgrade_mod_savepoint(true, 2026111000, 'attendancejourneys');
+    }
+
+    if ($oldversion < 2026111001) {
+        // Stable release metadata and the bulk confirmation message require no data changes.
+        upgrade_mod_savepoint(true, 2026111001, 'attendancejourneys');
+    }
+
+    if ($oldversion < 2026111002) {
+        // Bulk removal uses the existing journey membership records.
+        upgrade_mod_savepoint(true, 2026111002, 'attendancejourneys');
+    }
+
+    if ($oldversion < 2026111003) {
+        // The terminology layout changes no stored data.
+        upgrade_mod_savepoint(true, 2026111003, 'attendancejourneys');
+    }
+
     return true;
 }

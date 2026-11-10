@@ -301,9 +301,11 @@ if (in_array($action, ['add', 'edit'], true)) {
             $message = attendancejourneys_get_string('journeyupdated', 'attendancejourneys');
         } else {
             $record->timecreated = time();
-            $record->audiencemode = empty($activity->journeygrading) ? 0 : 2;
+            $record->audiencemode = empty($activity->journeygrading) ? 0 : (empty($data->followenrolments) ? 2 : 3);
             $record->id = $DB->insert_record('attendancejourneys_journeys', $record);
-            $assigneduserids = attendancejourneys_assign_journey_members($context, $record);
+            $assigneduserids = $record->audiencemode === 3
+                ? array_keys(attendancejourneys_get_journey_participants($context, $record))
+                : attendancejourneys_assign_journey_members($context, $record);
             attendancejourneys_update_completion($course, $cm, $assigneduserids);
             foreach ($assigneduserids as $assigneduserid) {
                 attendancejourneys_update_grades($activity, (int) $assigneduserid);

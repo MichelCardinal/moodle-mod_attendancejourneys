@@ -1,5 +1,15 @@
 # Registro de cambios
 
+## 1.2.0
+
+Compilación 2026111003. Compatible con Moodle 4.5–5.3.
+
+- Planificar sesiones antes de la matriculación. Un nuevo itinerario puede seguir las matrículas activas hasta el primer registro de asistencia o de un resultado final.
+- Añadir varios participantes a un itinerario manual en un solo envío.
+- Retirar a varios participantes de un itinerario manual abierto con una sola confirmación, antes de guardar asistencia o un resultado final.
+- Alinear las etiquetas de singular y plural con sus campos, también en pantallas pequeñas.
+- Los itinerarios existentes conservan su comportamiento y su historial de asistencia.
+
 ## 1.1.0 — 2026-10-08
 
 Primera versión pública estable basada en RC12 validada. Versión técnica 2026100807; sin cambios de esquema, cálculo, calificación o permisos. Punto de actualización nativo sin cambios pedagógicos y enlaces públicos de código y soporte. Las entradas anteriores describen desarrollo no publicado.

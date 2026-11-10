@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/attendancejourneys/db" VERSION="2026100804" COMMENT="XMLDB file for Attendance Journeys"
+<XMLDB PATH="mod/attendancejourneys/db" VERSION="2026111000" COMMENT="XMLDB file for Attendance Journeys"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
@@ -88,7 +88,7 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true"/>
         <FIELD NAME="gradeitemnumber" TYPE="int" LENGTH="10" NOTNULL="false" COMMENT="Stable Moodle grade item number within the activity"/>
         <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" COMMENT="Whether this journey is required for activity completion"/>
-        <FIELD NAME="audiencemode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="0 legacy inference, 1 enrolled audience, 2 explicit membership"/>
+        <FIELD NAME="audiencemode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" COMMENT="0 legacy inference, 1 enrolled audience, 2 explicit membership, 3 tracking enrolments, 4 frozen enrolment audience"/>
         <FIELD NAME="passinggrade" TYPE="number" LENGTH="5" NOTNULL="false" DECIMALS="2" COMMENT="Journey threshold; null inherits the activity threshold"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false"/>
         <FIELD NAME="groupid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0"/>

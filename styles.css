@@ -1811,3 +1811,26 @@
     border-radius: .375rem;
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
 }
+
+/* Match the terminology headings to the width of the corresponding Moodle form fields. */
+.attendancejourneys-term-columns {
+    display: flex;
+    column-gap: .5rem;
+}
+
+.attendancejourneys-term-heading,
+.mform .form-control[data-attendancejourneys-term] {
+    box-sizing: border-box;
+    width: 38vw;
+    max-width: 10rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.attendancejourneys-term-heading {
+    font-weight: 700;
+}
+
+.mform .form-control[data-attendancejourneys-term] {
+    margin-inline-end: .5rem;
+}

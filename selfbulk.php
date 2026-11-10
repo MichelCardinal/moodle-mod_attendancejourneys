@@ -133,6 +133,17 @@ if (data_submitted() && confirm_sesskey()) {
     if (!$errors) {
         $transaction = $DB->start_delegated_transaction();
         foreach ($changes as $change) {
+            $preparing = attendancejourneys_get_preparing_journey(
+                (int) $change->session->journeyid,
+                (int) $attendancejourneys->id
+            );
+            if ($preparing) {
+                $audienceids = array_keys(attendancejourneys_get_journey_participants($context, $preparing));
+                if (!in_array((int) $USER->id, $audienceids, true)) {
+                    throw new moodle_exception('journeyaudiencechanged', 'attendancejourneys');
+                }
+                attendancejourneys_freeze_journey_audience($context, $preparing, $audienceids);
+            }
             $saved = (object) [
                 'sessionid' => $change->session->id,
                 'userid' => $USER->id,

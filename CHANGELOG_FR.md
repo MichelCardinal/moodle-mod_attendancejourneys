@@ -1,5 +1,15 @@
 # Historique des versions
 
+## 1.2.0
+
+Build 2026111003. Compatible avec Moodle 4.5 à 5.3.
+
+- Planifier des séances avant les inscriptions. Un nouveau parcours peut suivre les inscriptions actives jusqu’à la première prise de présences ou au premier résultat final enregistré.
+- Ajouter plusieurs participants à un parcours manuel en un seul envoi.
+- Retirer plusieurs participants d’un parcours manuel ouvert avec une seule confirmation, avant tout enregistrement de présence ou de résultat final.
+- Aligner les libellés Singulier et Pluriel avec leurs champs, y compris sur petit écran.
+- Les parcours existants conservent leur fonctionnement et leur historique de présences.
+
 ## 1.1.0 — 2026-10-08
 
 Première version publique stable issue de la RC12 validée. Version technique 2026100807; aucun changement de schéma, calcul, note ou permission. Étape de version native sans mutation pédagogique et liens publics de code/assistance. Les entrées antérieures décrivent le développement non publié.

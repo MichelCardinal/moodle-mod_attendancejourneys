@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0
+
+Build 2026111003. Supports Moodle 4.5–5.3.
+
+- Plan sessions before participants enrol. A new journey can follow active course enrolments until attendance is first saved or a final result is recorded.
+- Add several participants to a manual journey in one submission.
+- Remove several participants from an open manual journey in one confirmed action before saving any attendance or final result.
+- Align the singular and plural labels with their terminology fields, including on small screens.
+- Existing journeys keep their enrolment behaviour and attendance history.
+
 ## 1.1.0 — 2026-10-08
 
 Promote the validated RC12 as the first public stable release. Technical version 2026100807; no schema, calculation, grade or permission changes. Add the native metadata-only savepoint and public repository/support links. Order English string keys without changing values and declare actual PHPUnit coverage targets for current Moodle coding checks. Earlier entries record unpublished development.

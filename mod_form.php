@@ -177,13 +177,13 @@ class mod_attendancejourneys_mod_form extends moodleform_mod {
             $mform->addElement('static', $columnselement, '', html_writer::div(
                 html_writer::span(
                     attendancejourneys_get_string('termsingular', 'attendancejourneys'),
-                    'w-50 font-weight-bold'
+                    'attendancejourneys-term-heading'
                 ) .
                 html_writer::span(
                     attendancejourneys_get_string('termplural', 'attendancejourneys'),
-                    'w-50 font-weight-bold'
+                    'attendancejourneys-term-heading'
                 ),
-                'd-flex'
+                'attendancejourneys-term-columns'
             ));
             if ($advanced) {
                 $mform->setAdvanced($columnselement);
@@ -213,12 +213,12 @@ class mod_attendancejourneys_mod_form extends moodleform_mod {
                 $mform->addGroup(
                     [
                     $mform->createElement('text', $singularfield, '', [
-                        'size' => 20, 'maxlength' => 100,
+                        'size' => 20, 'maxlength' => 100, 'data-attendancejourneys-term' => '1',
                         'placeholder' => $singularinstitutional !== '' ? $singularinstitutional : $singularcanonical,
                         'aria-label' => attendancejourneys_get_string('termsingular', 'attendancejourneys'),
                     ]),
                     $mform->createElement('text', $pluralfield, '', [
-                        'size' => 20, 'maxlength' => 100,
+                        'size' => 20, 'maxlength' => 100, 'data-attendancejourneys-term' => '1',
                         'placeholder' => $pluralinstitutional !== '' ? $pluralinstitutional : $pluralcanonical,
                         'aria-label' => attendancejourneys_get_string('termplural', 'attendancejourneys'),
                     ]),

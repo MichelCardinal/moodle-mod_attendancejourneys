@@ -119,6 +119,14 @@ class journey extends \moodleform {
         $mform->setDefault('waitlistenabled', 0);
         $mform->addHelpButton('waitlistenabled', 'journeywaitlistenabled', 'attendancejourneys');
 
+        if (empty($this->_customdata['editing']) && !empty($this->_customdata['attendancejourneys']->journeygrading)) {
+            $mform->addElement(
+                'advcheckbox',
+                'followenrolments',
+                get_string('journeyfollowenrolments', 'attendancejourneys')
+            );
+            $mform->addHelpButton('followenrolments', 'journeyfollowenrolments', 'attendancejourneys');
+        }
         $groups = groups_get_activity_allowed_groups($this->_customdata['cm']);
         $options = [0 => attendancejourneys_get_string('allactiveparticipants', 'attendancejourneys')];
         if (
@@ -134,16 +142,14 @@ class journey extends \moodleform {
         $mform->addHelpButton('groupid', 'journeyaudience', 'attendancejourneys');
         if (!empty($this->_customdata['editing'])) {
             $mform->freeze('groupid');
-            $mform->addElement(
-                'static',
-                'audiencenotice',
-                '',
-                attendancejourneys_get_string(
-                    attendancejourneys_journey_has_fixed_audience($this->_customdata['journey']) ?
-                        'journeyaudiencefrozen' : 'journeyaudienceautomaticnotice',
-                    'attendancejourneys'
-                )
-            );
+            $journey = $this->_customdata['journey'];
+            $notice = match ((int) ($journey->audiencemode ?? 0)) {
+                3 => 'journeyaudiencepreparing',
+                4 => 'journeyaudiencefrozenafterstart',
+                default => attendancejourneys_journey_has_fixed_audience($journey)
+                    ? 'journeyaudiencefrozen' : 'journeyaudienceautomaticnotice',
+            };
+            $mform->addElement('static', 'audiencenotice', '', attendancejourneys_get_string($notice, 'attendancejourneys'));
         }
 
         $mform->addElement('advcheckbox', 'hasdates', attendancejourneys_get_string('journeydefinedates', 'attendancejourneys'));
@@ -215,6 +221,13 @@ class journey extends \moodleform {
         }
         if (!in_array($data['defaultmodality'] ?? '', ['unspecified', 'inperson', 'online', 'hybrid'], true)) {
             $errors['defaultmodality'] = attendancejourneys_get_string('invalidmodality', 'attendancejourneys');
+        }
+        $tracking = !empty($this->_customdata['editing'])
+            ? in_array((int) ($this->_customdata['journey']->audiencemode ?? 0), [3, 4], true)
+            : (!empty($activity->journeygrading) && !empty($data['followenrolments']));
+        if ($tracking && (!empty($data['groupid']) || !empty($data['capacity']) || !empty($data['waitlistenabled']))) {
+            $field = empty($this->_customdata['editing']) ? 'followenrolments' : 'capacity';
+            $errors[$field] = get_string('journeyfollowenrolmentsconstraints', 'attendancejourneys');
         }
         $capacity = (int) ($data['capacity'] ?? 0);
         if ($capacity < 0) {

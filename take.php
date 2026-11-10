@@ -97,12 +97,19 @@ if ($sessionjourney && empty($sessionjourney->active) && $allowarchived) {
     $PAGE->set_url($url);
 }
 
+$preparing = attendancejourneys_get_preparing_journey((int) $session->journeyid, (int) $attendancejourneys->id);
+$audience = $preparing ? attendancejourneys_get_journey_participants($context, $preparing) : [];
+$audiencesignature = $preparing ? attendancejourneys_audience_signature(array_keys($audience)) : '';
 $participants = attendancejourneys_get_session_participants(
     $context,
     $session,
     'u.*',
     'u.lastname ASC, u.firstname ASC, u.id ASC'
 );
+if ($preparing) {
+    // A course enrolment can change between reads independently of the activity lock.
+    $participants = array_intersect_key($participants, $audience);
+}
 $totalparticipants = count($participants);
 $page = min($page, max(0, (int) ceil($totalparticipants / $perpage) - 1));
 $participants = array_slice($participants, $page * $perpage, $perpage, true);
@@ -141,6 +148,9 @@ if (data_submitted() && confirm_sesskey()) {
     $submittedversion = required_param('sheetversion', PARAM_INT);
     if ($submittedversion !== $sheetversion) {
         $concurrenterror = attendancejourneys_get_string('attendanceconcurrentchange', 'attendancejourneys');
+    }
+    if (optional_param('audiencesignature', '', PARAM_ALPHANUM) !== $audiencesignature) {
+        $concurrenterror = get_string('journeyaudiencechanged', 'attendancejourneys');
     }
     $statuses = optional_param_array('status', [], PARAM_ALPHA);
     $minutesvalues = optional_param_array('minutesabsent', [], PARAM_INT);
@@ -207,6 +217,9 @@ if (data_submitted() && confirm_sesskey()) {
 
     if (!$errors && !$concurrenterror) {
         $transaction = $DB->start_delegated_transaction();
+        if ($preparing && $records) {
+            attendancejourneys_freeze_journey_audience($context, $preparing, array_keys($audience));
+        }
         $changeduserids = [];
         $actualchangecount = 0;
         $approvalchangecount = 0;
@@ -447,6 +460,11 @@ if (!$participants) {
     ]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()]);
     echo html_writer::empty_tag('input', ['type' => 'hidden', 'name' => 'sheetversion', 'value' => $sheetversion]);
+    if ($preparing) {
+        echo html_writer::empty_tag('input', [
+            'type' => 'hidden', 'name' => 'audiencesignature', 'value' => $audiencesignature,
+        ]);
+    }
     echo html_writer::start_div('attendancejourneys-take-tools');
     echo html_writer::start_div('attendancejourneys-participant-filters');
     echo html_writer::label(
