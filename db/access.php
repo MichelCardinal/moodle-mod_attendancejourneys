@@ -128,6 +128,12 @@ $capabilities = [
         'archetypes' => ['editingteacher' => CAP_ALLOW, 'manager' => CAP_ALLOW],
         'clonepermissionsfrom' => 'mod/attendancejourneys:managejourneys',
     ],
+    'mod/attendancejourneys:correctclosedattendance' => [
+        'riskbitmask' => RISK_DATALOSS | RISK_PERSONAL,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => [],
+    ],
     'mod/attendancejourneys:manageattempts' => [
         'riskbitmask' => RISK_DATALOSS | RISK_PERSONAL,
         'captype' => 'write',

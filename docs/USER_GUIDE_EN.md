@@ -89,6 +89,8 @@ The “Mark all…” actions accelerate staff entry. Individual exceptions can 
 
 On a session sheet, use filters and bulk actions first, then handle exceptions participant by participant. A sheet may remain partially recorded.
 
+After saving, the confirmation appears beside **Save attendance** and indicates whether the sheet is complete.
+
 Attendance sheets display up to 100 participants per page. Save before changing pages. Search, filters and status-preparation buttons apply to the displayed rows on that page. The approval button covers all declarations on the current page, including declarations hidden by a filter. Review the confirmation and repeat on other pages when needed.
 
 ![Partial attendance with 60 minutes absent](images/en/04-partial-attendance.jpg)
@@ -227,3 +229,7 @@ For a new journey covering the whole course, select **Follow course enrolments u
 For a manual journey, open **Journeys → your journey → Add participants** before recording attendance. Search for and select several eligible students, then save once. The additions apply to all sessions already in the journey.
 
 To correct the list, choose **Remove participants** under **Participant progress**, select everyone to remove and confirm once. This is available while the manual journey is open and has no saved attendance or final results. Participants keep their course enrolments and Moodle groups.
+
+While the result is open, open the participant’s individual report under **Reports** and select **Correct attendance** beside the session. Save the corrected status and absence minutes to return to the updated report.
+
+For a final result, authorised staff can choose **Correct after closure** beside the session. Enter the corrected attendance and a reason, preview the result, then confirm. Moodle records the correction in the attendance history.

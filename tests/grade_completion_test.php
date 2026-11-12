@@ -17,8 +17,11 @@
 namespace mod_attendancejourneys;
 
 use mod_attendancejourneys\completion\custom_completion;
+use mod_attendancejourneys\local\closed_attendance;
+use mod_attendancejourneys\local\write_lock;
 
 #[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\completion\custom_completion::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_attendancejourneys\local\closed_attendance::class)]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_assign_journey_member')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_close_user_journey')]
 #[\PHPUnit\Framework\Attributes\CoversFunction('attendancejourneys_complete_journey')]
@@ -69,6 +72,91 @@ final class grade_completion_test extends \advanced_testcase {
             'iteminstance' => $activity->id, 'itemnumber' => 0,
         ], '*', MUST_EXIST);
         $this->assertEquals(80.0, (float) $item->gradepass);
+    }
+
+    /**
+     * Provide both gradebook modes.
+     *
+     * @return array
+     */
+    public static function correction_grade_modes(): array {
+        return ['activity grade' => [false], 'journey grade' => [true]];
+    }
+
+    /**
+     * A closed result can be previewed without writes and corrected with an auditable final grade.
+     *
+     * @param bool $journeygrading Whether the activity publishes a grade per journey.
+     * @dataProvider correction_grade_modes
+     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('correction_grade_modes')]
+    public function test_closed_correction_updates_only_the_confirmed_result(bool $journeygrading): void {
+        global $DB;
+        [$activity, $participant, $teacher, $journeyid, $cm] = $this->create_fixture($journeygrading);
+        $course = get_course($activity->course);
+        $userid = (int) $participant->id;
+        $context = \context_module::instance($cm->id);
+        $this->setUser($teacher);
+        $this->assertFalse(has_capability('mod/attendancejourneys:correctclosedattendance', $context));
+
+        $record = $DB->get_record('attendancejourneys_records', ['userid' => $userid], '*', MUST_EXIST);
+        $session = $DB->get_record('attendancejourneys_sessions', ['id' => $record->sessionid], '*', MUST_EXIST);
+        $closure = attendancejourneys_close_user_journey($activity, $userid, (int) $teacher->id, $journeyid);
+        attendancejourneys_update_grades($activity, $userid);
+        $itemnumber = $journeygrading
+            ? (int) $DB->get_field('attendancejourneys_journeys', 'gradeitemnumber', ['id' => $journeyid], MUST_EXIST)
+            : 0;
+        $this->setAdminUser();
+        $this->assertTrue(closed_attendance::applies($activity, $closure, $session, $record));
+        $preview = closed_attendance::preview($activity, $closure, $record, 'absent', 60, 'Attendance verified');
+        $this->assertEquals(0, $preview->calculation->percent);
+        $this->assertEquals(100, $this->get_raw_grade($activity, $participant, $itemnumber));
+        $this->assertEquals($closure->id, attendancejourneys_get_active_closure((int) $activity->id, $userid)->id);
+
+        grade_regrade_final_grades((int) $course->id);
+        $item = \grade_item::fetch([
+            'itemmodule' => 'attendancejourneys', 'iteminstance' => $activity->id, 'itemnumber' => $itemnumber,
+        ]);
+        $item->set_locked(true);
+        $this->assertSame('journeygradelocked', closed_attendance::protection($activity, $closure, $record));
+        $item->set_locked(false);
+        $this->assertNull(closed_attendance::protection($activity, $closure, $record));
+
+        $roleid = $DB->get_field('role', 'id', ['shortname' => 'editingteacher'], MUST_EXIST);
+        assign_capability('mod/attendancejourneys:closejourneys', CAP_PREVENT, $roleid, $context->id, true);
+        assign_capability('mod/attendancejourneys:reopenjourneys', CAP_PREVENT, $roleid, $context->id, true);
+        assign_capability('mod/attendancejourneys:correctclosedattendance', CAP_ALLOW, $roleid, $context->id, true);
+        $this->setUser($teacher);
+        $this->assertFalse(has_capability('mod/attendancejourneys:closejourneys', $context));
+        $this->assertFalse(has_capability('mod/attendancejourneys:reopenjourneys', $context));
+        $this->assertTrue(has_capability('mod/attendancejourneys:correctclosedattendance', $context));
+
+        $lock = new write_lock((int) $activity->id);
+        $revised = closed_attendance::commit(
+            $activity,
+            $course,
+            $cm,
+            $closure,
+            $record,
+            $preview->record,
+            'Attendance verified',
+            $lock
+        );
+        $lock->release();
+        $this->assertNotEquals($closure->id, $revised->id);
+        $this->assertEquals(0, $this->get_raw_grade($activity, $participant, $itemnumber));
+        $this->assertEquals(0, $DB->get_field('attendancejourneys_closures', 'active', ['id' => $closure->id]));
+        $review = $DB->get_record(
+            'attendancejourneys_reviews',
+            ['recordid' => $record->id, 'action' => 'closedcorrection'],
+            '*',
+            MUST_EXIST
+        );
+        $this->assertEquals($teacher->id, $review->actorid);
+        $details = json_decode($review->note);
+        $this->assertStringContainsString('status=present', $details->before);
+        $this->assertStringContainsString('status=absent', $details->after);
+        $this->assertSame('Attendance verified', $details->reason);
     }
 
     public function test_completion_requires_an_official_closure_for_closed_and_pass_rules(): void {
@@ -282,9 +370,10 @@ final class grade_completion_test extends \advanced_testcase {
 
     /**
      * Create the activity and related records needed by this test.
+     * @param bool $journeygrading Whether the activity publishes a grade per journey.
      * @return array
      */
-    private function create_fixture(): array {
+    private function create_fixture(bool $journeygrading = false): array {
         global $CFG, $DB;
         $this->resetAfterTest();
         require_once($CFG->dirroot . '/mod/attendancejourneys/lib.php');
@@ -295,6 +384,7 @@ final class grade_completion_test extends \advanced_testcase {
             'course' => $course->id, 'percentageenabled' => 1, 'gradeenabled' => 1, 'passinggrade' => 80,
             'completion' => COMPLETION_TRACKING_AUTOMATIC, 'completionrecorded' => 1,
             'completionallsessions' => 1, 'completionclosed' => 1, 'completionpass' => 1,
+            'journeygrading' => (int) $journeygrading,
         ]);
         $cm = get_coursemodule_from_instance('attendancejourneys', $activity->id, $course->id, false, MUST_EXIST);
         $participant = $generator->create_and_enrol($course, 'student');
@@ -329,13 +419,14 @@ final class grade_completion_test extends \advanced_testcase {
      *
      * @param \stdClass $activity Attendance activity and its configuration.
      * @param \stdClass $participant Participant whose grade is requested.
+     * @param int $itemnumber Moodle grade item number.
      * @return float|null
      */
-    private function get_raw_grade(\stdClass $activity, \stdClass $participant): ?float {
+    private function get_raw_grade(\stdClass $activity, \stdClass $participant, int $itemnumber = 0): ?float {
         global $DB;
         $item = $DB->get_record('grade_items', [
             'courseid' => $activity->course, 'itemmodule' => 'attendancejourneys',
-            'iteminstance' => $activity->id, 'itemnumber' => 0,
+            'iteminstance' => $activity->id, 'itemnumber' => $itemnumber,
         ], '*', MUST_EXIST);
         $grade = $DB->get_record('grade_grades', ['itemid' => $item->id, 'userid' => $participant->id]);
         return $grade && $grade->rawgrade !== null ? (float) $grade->rawgrade : null;

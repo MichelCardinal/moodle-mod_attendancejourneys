@@ -44,7 +44,7 @@ require_capability('mod/attendancejourneys:resetuserdata', $context);
 attendancejourneys_require_professional_mode($activity, (int) $cm->id);
 
 $actions = ['' => attendancejourneys_get_string('allactions', 'attendancejourneys')];
-foreach (['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted'] as $key) {
+foreach (['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted', 'closedcorrection'] as $key) {
     $actions[$key] = attendancejourneys_get_string('reviewaction' . $key, 'attendancejourneys');
 }
 if (!array_key_exists($action, $actions)) {

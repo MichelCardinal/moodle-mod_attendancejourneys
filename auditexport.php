@@ -49,7 +49,7 @@ $parsedate = static function (string $value, bool $endofday): int {
     $time = strtotime($value . ($endofday ? ' 23:59:59' : ' 00:00:00'));
     return $time ?: 0;
 };
-$validactions = ['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted'];
+$validactions = ['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted', 'closedcorrection'];
 if (!in_array($action, $validactions, true)) {
     $action = '';
 }

@@ -39,7 +39,7 @@ The percentage calculation and gradebook defaults are saved as a validated group
 
 Moodle roles can separately allow closing journeys, reopening them, opening personal new attempts and approving or revoking equivalences. Each decision also requires the existing journey-management capability; other course, group and activity access restrictions continue to apply. Equivalence proposals remain distinct from their approval.
 
-On upgrade, Moodle clones each new capability from the existing journey-management permission, including local prohibitions. Existing editing staff retain their rights until the administrator explicitly adapts the role. Check both capabilities when delegating a decision; hiding a button alone is not the access control.
+On upgrade, Moodle clones the closure, reopening, new-attempt and equivalence decision capabilities from the existing journey-management permission, including local prohibitions. Existing editing staff retain their rights until the administrator explicitly adapts the role. Check both capabilities when delegating a decision; hiding a button alone is not the access control.
 
 ## Institutional configuration
 
@@ -105,3 +105,7 @@ Confirmation opens a separate personal attempt with the original obligation’s 
 One obligation retains one grade item and one completion requirement across all its attempts. Independent theory and laboratory obligations retain separate thresholds, grades and requirements. An assignment number within the activity is not the personal attempt number for an obligation.
 
 An individual report for one obligation opens its current attempt directly. With multiple obligations, choose the obligation’s current attempt or a history link. Previous attendance and closures remain available. Physical-journey collective reports and Excel/PDF exports retain the requested journey’s records; **Previous final result** or **Previous attempt** means this result does not determine the current grade. Session-level exports include a separate **Attempt result status** column, so an attendance status such as Present is not confused with publication of a final result.
+
+The plugin’s **Closure permissions** section lists the capabilities for recording attendance, managing journeys, closing results and reopening them. It links to Moodle’s role and permission screens where available to your role. To change permissions for a single activity, use **More → Permissions** in that activity.
+
+Grant **Correct attendance after closure** explicitly at course or activity level. The reviewer also needs access to the participant’s report. To reserve the ordinary closure and reopening workflow for a validation team, review both existing capabilities in the activity.

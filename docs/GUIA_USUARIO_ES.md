@@ -91,6 +91,8 @@ Las acciones «Marcar todo…» aceleran el registro por parte del personal. Las
 
 En la hoja de una sesión, utilice primero los filtros y las acciones masivas y después trate las excepciones participante por participante. La hoja puede permanecer parcialmente registrada.
 
+Al guardar, la confirmación aparece junto al botón de guardado e indica si la hoja está completa.
+
 Las hojas muestran hasta 100 participantes por página. Guarde antes de cambiar de página. La búsqueda, los filtros y los botones de preparación de estados se aplican a las filas mostradas de esa página. El botón de aprobación incluye todas las declaraciones de la página actual, también las ocultas por un filtro. Revise la confirmación y repita en otras páginas cuando proceda.
 
 ![Asistencia parcial con 60 minutos ausentes](images/es/04-partial-attendance.jpg)
@@ -229,3 +231,7 @@ En un itinerario nuevo para todo el curso, seleccione **Seguir las matriculacion
 En un itinerario manual, abra **Itinerarios → su itinerario → Añadir participantes** antes de registrar la asistencia. Busque y seleccione a varias personas y guarde una sola vez. Se añadirán a las sesiones ya planificadas.
 
 Para corregir la lista, elija **Retirar participantes** en el apartado de progreso del itinerario, seleccione a las personas y confirme una sola vez. Esta acción está disponible mientras el itinerario manual esté abierto y no tenga asistencias ni resultados finales guardados. Las personas retiradas conservan su matrícula en el curso y sus grupos de Moodle.
+
+Mientras el resultado siga abierto, abra el informe individual en **Informes** y elija **Corregir la asistencia** junto a la sesión. Guarde el estado corregido y los minutos de ausencia para volver al informe actualizado.
+
+Para un resultado definitivo, el personal autorizado puede elegir **Corregir tras el cierre** junto a la sesión. Indique la asistencia corregida y el motivo, revise la vista previa y confirme. La corrección queda registrada en el historial de asistencia.

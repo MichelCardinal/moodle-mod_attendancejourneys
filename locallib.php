@@ -345,7 +345,7 @@ function attendancejourneys_add_review_history(
     string $note = ''
 ): int {
     global $DB;
-    $allowed = ['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted'];
+    $allowed = ['recorded', 'updated', 'approved', 'approvalwithdrawn', 'changesrequested', 'resubmitted', 'closedcorrection'];
     if (!in_array($action, $allowed, true)) {
         throw new coding_exception('Invalid attendance review action.');
     }
@@ -381,10 +381,20 @@ function attendancejourneys_record_audit_snapshot(stdClass $record): string {
  */
 function attendancejourneys_format_review_note(stdClass $review): string {
     $note = (string) $review->note;
+    if ($review->action === 'closedcorrection') {
+        $details = json_decode($note);
+        if (isset($details->before, $details->after, $details->reason)) {
+            return get_string('closedcorrectionaudit', 'attendancejourneys', (object) [
+                'before' => attendancejourneys_format_review_note((object) ['action' => 'updated', 'note' => $details->before]),
+                'after' => attendancejourneys_format_review_note((object) ['action' => 'updated', 'note' => $details->after]),
+                'reason' => $details->reason,
+            ]);
+        }
+    }
     if (!in_array($review->action, ['recorded', 'updated'], true)) {
         return $note;
     }
-    $pattern = '/\Astatus=(present|absent|partial|excused|unrecorded); minutesabsent=(\d+)(?:; remarks=(.*))?\z/s';
+    $pattern = '/\Astatus=(present|absent|partial|excused|exempt|unrecorded); minutesabsent=(\d+)(?:; remarks=(.*))?\z/s';
     if (!preg_match($pattern, $note, $parts)) {
         return $note;
     }
@@ -1738,15 +1748,19 @@ function attendancejourneys_closure_blocker(stdClass $calculation): ?array {
  * @return stdClass Closure snapshot.
  *
  * @param int $journeyid Journey identifier; zero denotes no specific journey.
+ * @param bool $resolvejourney Whether zero may resolve to the participant's active journey.
+ * @param float|null $frozenpassgrade Previously confirmed threshold for a correction.
  */
 function attendancejourneys_close_user_journey(
     stdClass $attendancejourneys,
     int $userid,
     int $closedby,
-    int $journeyid = 0
+    int $journeyid = 0,
+    bool $resolvejourney = true,
+    ?float $frozenpassgrade = null
 ): stdClass {
     global $DB;
-    if ($journeyid === 0) {
+    if ($journeyid === 0 && $resolvejourney) {
         $cm = get_coursemodule_from_instance(
             'attendancejourneys',
             $attendancejourneys->id,
@@ -1763,13 +1777,14 @@ function attendancejourneys_close_user_journey(
             $journeyid = $activejourney ? (int) $activejourney->id : 0;
         }
     }
-    $existingclosure = $journeyid > 0 ?
+    $existingclosure = $journeyid > 0 || !$resolvejourney ?
         attendancejourneys_get_active_closure((int) $attendancejourneys->id, $userid, $journeyid) :
         attendancejourneys_get_active_closure((int) $attendancejourneys->id, $userid);
     if ($existingclosure) {
         throw new coding_exception('The attendance journey is already closed.');
     }
-    $calculation = attendancejourneys_calculate_user_attendance($attendancejourneys, $userid, $journeyid);
+    $calculation = \mod_attendancejourneys\local\calculator::calculate($attendancejourneys, $userid, $journeyid);
+    $calculation->threshold = $frozenpassgrade ?? $calculation->threshold;
     $blocker = attendancejourneys_closure_blocker($calculation);
     if ($blocker) {
         throw new moodle_exception($blocker[0], 'attendancejourneys', '', $blocker[1]);

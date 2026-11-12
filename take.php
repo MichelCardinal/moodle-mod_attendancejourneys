@@ -31,6 +31,7 @@ $id = required_param('id', PARAM_INT);
 $sessionid = required_param('sessionid', PARAM_INT);
 $page = max(0, optional_param('page', 0, PARAM_INT));
 $perpage = 100;
+$targetparticipantid = optional_param('participantid', 0, PARAM_INT);
 $allowarchived = optional_param('allowarchived', 0, PARAM_BOOL);
 
 $cm = get_coursemodule_from_id('attendancejourneys', $id, 0, false, MUST_EXIST);
@@ -64,6 +65,16 @@ if (!empty($session->cancelled)) {
 }
 
 $url = new moodle_url('/mod/attendancejourneys/take.php', ['id' => $cm->id, 'sessionid' => $session->id]);
+$returnurl = null;
+if ($targetparticipantid) {
+    require_capability('mod/attendancejourneys:viewreports', $context);
+    $url->param('participantid', $targetparticipantid);
+    $returnurl = new moodle_url('/mod/attendancejourneys/individual.php', [
+        'id' => $cm->id,
+        'userid' => $targetparticipantid,
+        'journeyid' => (int) $session->journeyid,
+    ]);
+}
 $PAGE->set_url($url);
 $PAGE->set_title(attendancejourneys_get_string('takeattendance', 'attendancejourneys'));
 $PAGE->set_heading(format_string($course->fullname));
@@ -83,7 +94,7 @@ if ($sessionjourney && empty($sessionjourney->active) && !$allowarchived) {
             format_string($sessionjourney->name)
         ),
         new moodle_url($url, ['allowarchived' => 1, 'sesskey' => sesskey()]),
-        new moodle_url('/mod/attendancejourneys/attendance.php', ['id' => $cm->id])
+        $returnurl ?? new moodle_url('/mod/attendancejourneys/attendance.php', ['id' => $cm->id])
     );
     echo $OUTPUT->footer();
     exit;
@@ -110,22 +121,54 @@ if ($preparing) {
     // A course enrolment can change between reads independently of the activity lock.
     $participants = array_intersect_key($participants, $audience);
 }
+if ($targetparticipantid) {
+    if (!isset($participants[$targetparticipantid])) {
+        throw new moodle_exception('invaliduser', 'error');
+    }
+    if (
+        attendancejourneys_get_active_closure(
+            (int) $attendancejourneys->id,
+            $targetparticipantid,
+            $session->journeyid ? (int) $session->journeyid : null
+        )
+    ) {
+        redirect(
+            $returnurl,
+            get_string('correctattendanceclosed', 'attendancejourneys'),
+            null,
+            \core\output\notification::NOTIFY_WARNING
+        );
+    }
+    $participants = [$targetparticipantid => $participants[$targetparticipantid]];
+}
 $totalparticipants = count($participants);
 $page = min($page, max(0, (int) ceil($totalparticipants / $perpage) - 1));
 $participants = array_slice($participants, $page * $perpage, $perpage, true);
 $url->param('page', $page);
 $PAGE->set_url($url);
+$recordconditions = ['sessionid' => $session->id];
+if ($targetparticipantid) {
+    $recordconditions['userid'] = $targetparticipantid;
+}
 $existingrecords = [];
 foreach (
     $DB->get_records(
         'attendancejourneys_records',
-        ['sessionid' => $session->id],
+        $recordconditions,
         '',
         'id,userid,status,minutesabsent,remarks,takenby,approved,approvedby,timeapproved,changesrequested,' .
         'reviewnote,reviewedby,timereviewed,timemodified'
     ) as $existingrecord
 ) {
     $existingrecords[$existingrecord->userid] = $existingrecord;
+}
+if ($targetparticipantid && !isset($existingrecords[$targetparticipantid])) {
+    redirect(
+        $returnurl,
+        get_string('correctattendancemissing', 'attendancejourneys'),
+        null,
+        \core\output\notification::NOTIFY_WARNING
+    );
 }
 $approvers = [];
 $approverids = array_values(array_unique(array_filter(array_map(
@@ -177,7 +220,7 @@ if (data_submitted() && confirm_sesskey()) {
             // A missing field must never erase an existing record (for example after request truncation).
             continue;
         }
-        if ($status === 'unrecorded') {
+        if ($status === 'unrecorded' && !$targetparticipantid) {
             $unrecordeduserids[] = $userid;
             continue;
         }
@@ -321,6 +364,14 @@ if (data_submitted() && confirm_sesskey()) {
                 attendancejourneys_update_grades($attendancejourneys, $changeduserid);
             }
         }
+        if ($returnurl) {
+            redirect(
+                $returnurl,
+                get_string('correctattendancesaved', 'attendancejourneys'),
+                null,
+                \core\output\notification::NOTIFY_SUCCESS
+            );
+        }
         $recordedcount = 0;
         foreach ($participants as $participant) {
             $userid = (int) $participant->id;
@@ -340,7 +391,13 @@ if (data_submitted() && confirm_sesskey()) {
                 'total' => count($participants),
                 'remaining' => $remainingcount,
             ]);
-        redirect($url, $savedmessage, null, \core\output\notification::NOTIFY_SUCCESS);
+        $SESSION->attendancejourneys_sheet_confirmation = [
+            'url' => $url->out(false),
+            'message' => $savedmessage,
+        ];
+        $confirmationurl = clone $url;
+        $confirmationurl->set_anchor('attendancejourneys-save-confirmation');
+        redirect($confirmationurl);
     }
 } else {
     $statuses = [];
@@ -362,6 +419,17 @@ if ($attendancejourneys->excusedenabled) {
     $statusoptions['excused'] = attendancejourneys_get_string('statusexcused', 'attendancejourneys');
 }
 
+if ($targetparticipantid) {
+    unset($statusoptions['unrecorded']);
+}
+
+$sheetconfirmation = $SESSION->attendancejourneys_sheet_confirmation ?? null;
+$savedmessage = null;
+if (!data_submitted() && $sheetconfirmation && $sheetconfirmation['url'] === $url->out(false)) {
+    $savedmessage = $sheetconfirmation['message'];
+    unset($SESSION->attendancejourneys_sheet_confirmation);
+}
+
 echo $OUTPUT->header();
 attendancejourneys_print_navigation($cm, $context, 'attendance');
 echo html_writer::start_div('attendancejourneys-take-page');
@@ -370,11 +438,14 @@ echo html_writer::div(
     attendancejourneys_get_string('attendanceworkflow', 'attendancejourneys'),
     'attendancejourneys-section-eyebrow'
 );
-echo $OUTPUT->heading(attendancejourneys_get_string('takeattendance', 'attendancejourneys'));
+echo $OUTPUT->heading($targetparticipantid ? get_string('correctattendance', 'attendancejourneys') :
+    attendancejourneys_get_string('takeattendance', 'attendancejourneys'));
 if (!empty($attendancejourneys->journeygrading)) {
     echo $OUTPUT->notification(get_string('journeyabsencepolicy', 'attendancejourneys'), 'info');
 }
-echo html_writer::div(attendancejourneys_get_string('takeattendanceintro', 'attendancejourneys'), 'text-muted');
+if (!$targetparticipantid) {
+    echo html_writer::div(attendancejourneys_get_string('takeattendanceintro', 'attendancejourneys'), 'text-muted');
+}
 echo html_writer::end_div();
 
 echo html_writer::start_div('attendancejourneys-session-summary');
@@ -465,167 +536,169 @@ if (!$participants) {
             'type' => 'hidden', 'name' => 'audiencesignature', 'value' => $audiencesignature,
         ]);
     }
-    echo html_writer::start_div('attendancejourneys-take-tools');
-    echo html_writer::start_div('attendancejourneys-participant-filters');
-    echo html_writer::label(
-        attendancejourneys_get_string('searchparticipants', 'attendancejourneys'),
-        'attendancejourneys-participant-search',
-        false,
-        ['class' => 'sr-only visually-hidden']
-    );
-    echo html_writer::empty_tag('input', [
-        'type' => 'search',
-        'id' => 'attendancejourneys-participant-search',
-        'class' => 'form-control ignoredirty',
-        'placeholder' => attendancejourneys_get_string('searchparticipants', 'attendancejourneys'),
-        'autocomplete' => 'off',
-    ]);
-    echo html_writer::label(
-        attendancejourneys_get_string('filterbystatus', 'attendancejourneys'),
-        'attendancejourneys-participant-status-filter',
-        false,
-        ['class' => 'sr-only visually-hidden']
-    );
-    $filteroptions = [
-        'all' => attendancejourneys_get_string('allparticipants', 'attendancejourneys'),
-        'unrecorded' => attendancejourneys_get_string('notrecorded', 'attendancejourneys'),
-    ] + array_filter($statusoptions, static fn($key) => $key !== 'unrecorded', ARRAY_FILTER_USE_KEY);
-    echo html_writer::select($filteroptions, 'participantstatusfilter', 'all', false, [
-        'id' => 'attendancejourneys-participant-status-filter',
-        'class' => 'custom-select form-select ignoredirty',
-    ]);
-    echo html_writer::label(
-        attendancejourneys_get_string('filterbysource', 'attendancejourneys'),
-        'attendancejourneys-participant-source-filter',
-        false,
-        ['class' => 'sr-only visually-hidden']
-    );
-    echo html_writer::select([
-        'all' => attendancejourneys_get_string('allrecordingsources', 'attendancejourneys'),
-        'selfpending' => attendancejourneys_get_string('attendanceawaitingapproval', 'attendancejourneys'),
-        'selfcorrection' => attendancejourneys_get_string('correctionsrequested', 'attendancejourneys'),
-        'selfapproved' => attendancejourneys_get_string('attendanceapproveddeclaration', 'attendancejourneys'),
-        'staff' => attendancejourneys_get_string('attendancesourcestaff', 'attendancejourneys'),
-        'unrecorded' => attendancejourneys_get_string('statusunrecorded', 'attendancejourneys'),
-    ], 'participantsourcefilter', 'all', false, [
-        'id' => 'attendancejourneys-participant-source-filter',
-        'class' => 'custom-select form-select ignoredirty',
-    ]);
-    $participantcountlabel = attendancejourneys_get_string('participantsdisplayed', 'attendancejourneys', (object) [
-        'visible' => count($participants),
-        'total' => count($participants),
-    ]);
-    $participantcounttemplate = attendancejourneys_get_string('participantsdisplayed', 'attendancejourneys', (object) [
-        'visible' => '{visible}',
-        'total' => '{total}',
-    ]);
-    echo html_writer::span($participantcountlabel, 'attendancejourneys-participant-count', [
-        'aria-live' => 'polite', 'data-label' => $participantcounttemplate,
-    ]);
-    echo html_writer::end_div();
-    echo html_writer::start_div('attendancejourneys-bulk-actions');
-    echo html_writer::tag(
-        'span',
-        attendancejourneys_get_string('bulkstatusactions', 'attendancejourneys'),
-        ['class' => 'attendancejourneys-field-label']
-    );
-    echo html_writer::start_div('attendancejourneys-bulk-status-buttons');
-    $bulkstatuses = [
-        'unrecorded' => ['bulkstatusunrecorded', 'btn-outline-secondary'],
-        'present' => ['bulkstatuspresent', 'btn-outline-primary'],
-        'absent' => ['bulkstatusabsent', 'btn-outline-danger'],
-        'partial' => ['bulkstatuspartial', 'btn-outline-warning'],
-    ];
-    if (!empty($attendancejourneys->journeygrading)) {
-        $bulkstatuses['exempt'] = ['bulkstatusexempt', 'btn-outline-secondary'];
-    }
-    if (!empty($attendancejourneys->excusedenabled)) {
-        $bulkstatuses['excused'] = ['bulkstatusexcused', 'btn-outline-secondary'];
-    }
-    foreach ($bulkstatuses as $bulkstatus => [$bulkstring, $bulkclass]) {
-        $attributes = [
-            'type' => 'button',
-            'class' => 'btn btn-sm ' . $bulkclass . ' attendancejourneys-bulk-status',
-            'data-status' => $bulkstatus,
-        ];
-        if ($bulkstatus === 'unrecorded') {
-            $attributes['data-confirm'] = attendancejourneys_get_string('bulkstatusunrecordedconfirm', 'attendancejourneys');
+    if (!$targetparticipantid) {
+        echo html_writer::start_div('attendancejourneys-participant-filters');
+        echo html_writer::start_div('attendancejourneys-filter-controls');
+        echo html_writer::label(
+            attendancejourneys_get_string('searchparticipants', 'attendancejourneys'),
+            'attendancejourneys-participant-search',
+            false,
+            ['class' => 'sr-only visually-hidden']
+        );
+        echo html_writer::empty_tag('input', [
+            'type' => 'search',
+            'id' => 'attendancejourneys-participant-search',
+            'class' => 'form-control ignoredirty',
+            'placeholder' => attendancejourneys_get_string('searchparticipants', 'attendancejourneys'),
+            'autocomplete' => 'off',
+        ]);
+        echo html_writer::label(
+            attendancejourneys_get_string('filterbystatus', 'attendancejourneys'),
+            'attendancejourneys-participant-status-filter',
+            false,
+            ['class' => 'sr-only visually-hidden']
+        );
+        $filteroptions = [
+            'all' => attendancejourneys_get_string('allparticipants', 'attendancejourneys'),
+            'unrecorded' => attendancejourneys_get_string('notrecorded', 'attendancejourneys'),
+        ] + array_filter($statusoptions, static fn($key) => $key !== 'unrecorded', ARRAY_FILTER_USE_KEY);
+        echo html_writer::select($filteroptions, 'participantstatusfilter', 'all', false, [
+            'id' => 'attendancejourneys-participant-status-filter',
+            'class' => 'custom-select form-select ignoredirty',
+        ]);
+        echo html_writer::label(
+            attendancejourneys_get_string('filterbysource', 'attendancejourneys'),
+            'attendancejourneys-participant-source-filter',
+            false,
+            ['class' => 'sr-only visually-hidden']
+        );
+        echo html_writer::select([
+            'all' => attendancejourneys_get_string('allrecordingsources', 'attendancejourneys'),
+            'selfpending' => attendancejourneys_get_string('attendanceawaitingapproval', 'attendancejourneys'),
+            'selfcorrection' => attendancejourneys_get_string('correctionsrequested', 'attendancejourneys'),
+            'selfapproved' => attendancejourneys_get_string('attendanceapproveddeclaration', 'attendancejourneys'),
+            'staff' => attendancejourneys_get_string('attendancesourcestaff', 'attendancejourneys'),
+            'unrecorded' => attendancejourneys_get_string('statusunrecorded', 'attendancejourneys'),
+        ], 'participantsourcefilter', 'all', false, [
+            'id' => 'attendancejourneys-participant-source-filter',
+            'class' => 'custom-select form-select ignoredirty',
+        ]);
+        echo html_writer::end_div();
+        echo html_writer::start_div('attendancejourneys-sheet-summary');
+        $participantcountlabel = attendancejourneys_get_string('participantsdisplayed', 'attendancejourneys', (object) [
+            'visible' => count($participants),
+            'total' => count($participants),
+        ]);
+        $participantcounttemplate = attendancejourneys_get_string('participantsdisplayed', 'attendancejourneys', (object) [
+            'visible' => '{visible}',
+            'total' => '{total}',
+        ]);
+        echo html_writer::span($participantcountlabel, 'attendancejourneys-participant-count', [
+            'aria-live' => 'polite', 'data-label' => $participantcounttemplate,
+        ]);
+        $recordedcount = 0;
+        foreach ($participants as $participant) {
+            $participantid = (int) $participant->id;
+            $currentstatus = $statuses[$participantid] ?? ($existingrecords[$participantid]->status ?? 'unrecorded');
+            if ($currentstatus !== 'unrecorded') {
+                $recordedcount++;
+            }
         }
-        echo html_writer::tag('button', attendancejourneys_get_string($bulkstring, 'attendancejourneys'), $attributes);
-    }
-    echo html_writer::tag('button', attendancejourneys_get_string('approvepagedeclarations', 'attendancejourneys'), [
-        'type' => 'submit', 'name' => 'approveall', 'value' => 1,
-        'class' => 'btn btn-sm btn-outline-success',
-    ]);
-    echo html_writer::start_div('attendancejourneys-bulk-partial-minutes');
-    echo html_writer::tag('label', attendancejourneys_get_string('bulkpartialminutes', 'attendancejourneys'), [
-        'for' => 'attendancejourneys-bulk-partial-minutes', 'class' => 'sr-only visually-hidden',
-    ]);
-    echo html_writer::empty_tag('input', [
-        'type' => 'number', 'id' => 'attendancejourneys-bulk-partial-minutes', 'value' => 1,
-        'min' => 1, 'max' => max(1, $session->duration - 1),
-        'class' => 'form-control form-control-sm ignoredirty',
-        'title' => attendancejourneys_get_string('bulkpartialminutes', 'attendancejourneys'),
-        'aria-label' => attendancejourneys_get_string('bulkpartialminutes', 'attendancejourneys'),
-    ]);
-    echo html_writer::span(get_string('minutes'), 'small text-muted');
-    echo html_writer::end_div();
-    echo html_writer::end_div();
-    echo html_writer::tag(
-        'small',
-        attendancejourneys_get_string('bulkstatusactions_help', 'attendancejourneys'),
-        ['class' => 'd-block text-muted mt-2']
-    );
-    echo html_writer::end_div();
-    echo html_writer::end_div();
+        $participanttotal = count($participants);
+        $iscomplete = $recordedcount === $participanttotal;
+        $recordedpercent = round(($recordedcount / $participanttotal) * 100);
+        $progresslabel = attendancejourneys_get_string('attendanceentryprogresslabel', 'attendancejourneys', (object) [
+            'recorded' => $recordedcount,
+            'total' => $participanttotal,
+        ]);
+        $progresslabeltemplate = attendancejourneys_get_string('attendanceentryprogresslabel', 'attendancejourneys', (object) [
+            'recorded' => '{recorded}',
+            'total' => '{total}',
+        ]);
+        $remaininglabeltemplate = attendancejourneys_get_string('attendanceentryremaining', 'attendancejourneys', '{remaining}');
+        $progressclass = 'attendancejourneys-entry-progress' . ($iscomplete ? ' is-complete' : '');
+        echo html_writer::start_div($progressclass, [
+            'role' => 'status',
+            'aria-live' => 'polite',
+            'data-label' => $progresslabeltemplate,
+            'data-remaining-label' => $remaininglabeltemplate,
+            'data-complete-label' => attendancejourneys_get_string('attendanceentrycomplete', 'attendancejourneys'),
+        ]);
+        echo html_writer::span($progresslabel, 'attendancejourneys-entry-progress-label');
+        echo html_writer::start_div('progress attendancejourneys-entry-progress-track');
+        echo html_writer::div('', 'progress-bar', [
+            'role' => 'progressbar',
+            'aria-label' => attendancejourneys_get_string('attendanceentryprogress', 'attendancejourneys'),
+            'aria-valuemin' => 0,
+            'aria-valuemax' => $participanttotal,
+            'aria-valuenow' => $recordedcount,
+            'style' => 'width: ' . $recordedpercent . '%',
+        ]);
+        echo html_writer::end_div();
+        echo html_writer::span(
+            $iscomplete
+            ? attendancejourneys_get_string('attendanceentrycomplete', 'attendancejourneys')
+            : attendancejourneys_get_string('attendanceentryremaining', 'attendancejourneys', $participanttotal - $recordedcount),
+            'attendancejourneys-entry-progress-state'
+        );
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::end_div();
 
-    $recordedcount = 0;
-    foreach ($participants as $participant) {
-        $participantid = (int) $participant->id;
-        $currentstatus = $statuses[$participantid] ?? ($existingrecords[$participantid]->status ?? 'unrecorded');
-        if ($currentstatus !== 'unrecorded') {
-            $recordedcount++;
+        echo html_writer::start_div('attendancejourneys-bulk-actions');
+        echo html_writer::tag(
+            'span',
+            attendancejourneys_get_string('bulkstatusactions', 'attendancejourneys'),
+            ['class' => 'attendancejourneys-field-label']
+        );
+        echo html_writer::start_div('attendancejourneys-bulk-status-buttons');
+        $bulkstatuses = [
+            'unrecorded' => ['bulkstatusunrecorded', 'btn-outline-secondary'],
+            'present' => ['bulkstatuspresent', 'btn-outline-primary'],
+            'absent' => ['bulkstatusabsent', 'btn-outline-danger'],
+            'partial' => ['bulkstatuspartial', 'btn-outline-warning'],
+        ];
+        if (!empty($attendancejourneys->journeygrading)) {
+            $bulkstatuses['exempt'] = ['bulkstatusexempt', 'btn-outline-secondary'];
         }
+        if (!empty($attendancejourneys->excusedenabled)) {
+            $bulkstatuses['excused'] = ['bulkstatusexcused', 'btn-outline-secondary'];
+        }
+        foreach ($bulkstatuses as $bulkstatus => [$bulkstring, $bulkclass]) {
+            $attributes = [
+                'type' => 'button',
+                'class' => 'btn btn-sm ' . $bulkclass . ' attendancejourneys-bulk-status',
+                'data-status' => $bulkstatus,
+            ];
+            if ($bulkstatus === 'unrecorded') {
+                $attributes['data-confirm'] = attendancejourneys_get_string('bulkstatusunrecordedconfirm', 'attendancejourneys');
+            }
+            echo html_writer::tag('button', attendancejourneys_get_string($bulkstring, 'attendancejourneys'), $attributes);
+        }
+        echo html_writer::start_div('attendancejourneys-bulk-partial-minutes');
+        echo html_writer::tag('label', attendancejourneys_get_string('minutesabsent', 'attendancejourneys'), [
+            'for' => 'attendancejourneys-bulk-partial-minutes', 'class' => 'small',
+        ]);
+        echo html_writer::empty_tag('input', [
+            'type' => 'number', 'id' => 'attendancejourneys-bulk-partial-minutes', 'value' => 1,
+            'min' => 1, 'max' => max(1, $session->duration - 1),
+            'class' => 'form-control form-control-sm ignoredirty',
+            'title' => attendancejourneys_get_string('bulkpartialminutes', 'attendancejourneys'),
+        ]);
+        echo html_writer::end_div();
+        echo html_writer::end_div();
+        echo html_writer::start_div('d-flex flex-wrap align-items-center justify-content-between gap-2 mt-2');
+        echo html_writer::tag(
+            'small',
+            attendancejourneys_get_string('bulkstatusactions_help', 'attendancejourneys'),
+        );
+        echo html_writer::tag('button', attendancejourneys_get_string('approvepagedeclarations', 'attendancejourneys'), [
+            'type' => 'submit', 'name' => 'approveall', 'value' => 1,
+            'class' => 'btn btn-sm btn-outline-success text-wrap mw-100',
+        ]);
+        echo html_writer::end_div();
+        echo html_writer::end_div();
     }
-    $participanttotal = count($participants);
-    $recordedpercent = $participanttotal > 0 ? round(($recordedcount / $participanttotal) * 100) : 0;
-    $progresslabel = attendancejourneys_get_string('attendanceentryprogresslabel', 'attendancejourneys', (object) [
-        'recorded' => $recordedcount,
-        'total' => $participanttotal,
-    ]);
-    $progresslabeltemplate = attendancejourneys_get_string('attendanceentryprogresslabel', 'attendancejourneys', (object) [
-        'recorded' => '{recorded}',
-        'total' => '{total}',
-    ]);
-    $remaininglabeltemplate = attendancejourneys_get_string('attendanceentryremaining', 'attendancejourneys', '{remaining}');
-    echo html_writer::start_div('attendancejourneys-entry-progress', [
-        'role' => 'status',
-        'aria-live' => 'polite',
-        'data-label' => $progresslabeltemplate,
-        'data-remaining-label' => $remaininglabeltemplate,
-        'data-complete-label' => attendancejourneys_get_string('attendanceentrycomplete', 'attendancejourneys'),
-    ]);
-    echo html_writer::start_div('attendancejourneys-entry-progress-header');
-    echo html_writer::tag('strong', attendancejourneys_get_string('attendanceentryprogress', 'attendancejourneys'));
-    echo html_writer::span($progresslabel, 'attendancejourneys-entry-progress-label');
-    echo html_writer::end_div();
-    echo html_writer::start_div('progress attendancejourneys-entry-progress-track');
-    echo html_writer::div('', 'progress-bar', [
-        'role' => 'progressbar',
-        'aria-label' => attendancejourneys_get_string('attendanceentryprogress', 'attendancejourneys'),
-        'aria-valuemin' => 0,
-        'aria-valuemax' => $participanttotal,
-        'aria-valuenow' => $recordedcount,
-        'style' => 'width: ' . $recordedpercent . '%',
-    ]);
-    echo html_writer::end_div();
-    echo html_writer::span(
-        $recordedcount === $participanttotal
-        ? attendancejourneys_get_string('attendanceentrycomplete', 'attendancejourneys')
-        : attendancejourneys_get_string('attendanceentryremaining', 'attendancejourneys', $participanttotal - $recordedcount),
-        'attendancejourneys-entry-progress-state'
-    );
-    echo html_writer::end_div();
 
     echo html_writer::start_div('attendancejourneys-attendance-list');
 
@@ -710,8 +783,7 @@ if (!$participants) {
             'class' => 'form-control',
             'maxlength' => 255,
         ]);
-        $participantcell = html_writer::tag('strong', s($participant->lastname), ['class' => 'attendancejourneys-lastname']) .
-            html_writer::tag('span', s($participant->firstname), ['class' => 'attendancejourneys-firstname']);
+        $participantcell = html_writer::tag('strong', s(fullname($participant)));
         if ($existing) {
             $isselfrecorded = (int) $existing->takenby === $userid;
             $sourceclass = $isselfrecorded ? 'attendancejourneys-source-self' : 'attendancejourneys-source-staff';
@@ -836,14 +908,22 @@ if (!$participants) {
         'attendancejourneys-no-filtered-participants alert alert-info',
         ['hidden' => 'hidden', 'role' => 'status']
     );
+    if ($savedmessage !== null) {
+        echo html_writer::div(
+            $OUTPUT->notification($savedmessage, \core\output\notification::NOTIFY_SUCCESS, false),
+            'attendancejourneys-save-confirmation',
+            ['id' => 'attendancejourneys-save-confirmation', 'tabindex' => '-1']
+        );
+    }
     echo html_writer::start_div('attendancejourneys-form-actions');
     echo html_writer::empty_tag('input', [
         'type' => 'submit',
         'value' => attendancejourneys_get_string('saveattendance', 'attendancejourneys'),
         'class' => 'btn btn-primary',
     ]);
-    $cancelurl = new moodle_url('/mod/attendancejourneys/sessions.php', ['id' => $cm->id]);
-    echo html_writer::link($cancelurl, get_string('cancel'), ['class' => 'btn btn-secondary ml-2 ms-2']);
+    $cancelurl = $returnurl ?? new moodle_url('/mod/attendancejourneys/sessions.php', ['id' => $cm->id]);
+    $cancellabel = $returnurl ? get_string('backtoindividualreport', 'attendancejourneys') : get_string('cancel');
+    echo html_writer::link($cancelurl, $cancellabel, ['class' => 'btn btn-secondary']);
     echo html_writer::end_div();
     echo html_writer::end_tag('form');
     echo $OUTPUT->paging_bar($totalparticipants, $page, $perpage, $url);

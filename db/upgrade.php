@@ -1583,5 +1583,15 @@ function xmldb_attendancejourneys_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2026111003, 'attendancejourneys');
     }
 
+    if ($oldversion < 2026111201) {
+        // Register the capability for correcting attendance after closure.
+        upgrade_mod_savepoint(true, 2026111201, 'attendancejourneys');
+    }
+
+    if ($oldversion < 2026111202) {
+        // Promote the validated release without modifying stored attendance.
+        upgrade_mod_savepoint(true, 2026111202, 'attendancejourneys');
+    }
+
     return true;
 }
