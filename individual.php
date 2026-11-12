@@ -90,7 +90,8 @@ $participants = attendancejourneys_get_visible_participants(
     'u.id,u.firstname,u.lastname,u.email,u.picture,u.imagealt,u.firstnamephonetic,u.lastnamephonetic,u.middlename,u.alternatename',
     null
 );
-if (!isset($participants[$userid])) {
+$isvisibleparticipant = isset($participants[$userid]);
+if (!$isvisibleparticipant) {
     $hasclosures = $DB->record_exists('attendancejourneys_closures', [
         'attendancejourneysid' => $attendancejourneys->id, 'userid' => $userid,
     ]);
@@ -228,6 +229,134 @@ if (!empty($attendancejourneys->journeygrading)) {
         $userid,
         (int) $activejourney->id
     ) : attendancejourneys_get_active_closure((int) $attendancejourneys->id, $userid);
+}
+if ($action === 'correctclosed') {
+    require_capability('mod/attendancejourneys:viewreports', $context);
+    require_capability('mod/attendancejourneys:correctclosedattendance', $context);
+    $session = $DB->get_record('attendancejourneys_sessions', [
+        'id' => required_param('sessionid', PARAM_INT), 'attendancejourneysid' => $attendancejourneys->id,
+    ], '*', MUST_EXIST);
+    $record = $DB->get_record('attendancejourneys_records', ['sessionid' => $session->id, 'userid' => $userid]);
+    if (
+        !$showjourneyclosure || !$isvisibleparticipant || !$closure || !$record ||
+            (!empty($session->journeyid) && !isset($visiblejourneys[$session->journeyid])) ||
+            !attendancejourneys_session_is_visible($cm, $context, $session) ||
+            !\mod_attendancejourneys\local\closed_attendance::applies($attendancejourneys, $closure, $session, $record)
+    ) {
+        throw new moodle_exception('closedcorrectionunavailable', 'attendancejourneys', $url);
+    }
+
+    $formurl = new moodle_url($url, ['action' => 'correctclosed', 'sessionid' => $session->id]);
+    $PAGE->set_url($formurl);
+    $PAGE->set_title(get_string('closedcorrection', 'attendancejourneys'));
+    $protection = \mod_attendancejourneys\local\closed_attendance::protection($attendancejourneys, $closure, $record);
+    $form = null;
+    $preview = null;
+    $blocker = null;
+    if ($protection === null) {
+        $statuses = ['present', 'absent', 'partial'];
+        if (!empty($attendancejourneys->excusedenabled)) {
+            $statuses[] = 'excused';
+        }
+        if (!empty($attendancejourneys->journeygrading)) {
+            $statuses[] = 'exempt';
+        }
+        $options = [];
+        foreach ($statuses as $status) {
+            $options[$status] = attendancejourneys_get_string('status' . $status, 'attendancejourneys');
+        }
+        $formoptions = ['statuses' => $options, 'duration' => (int) $session->duration];
+        $form = new \mod_attendancejourneys\form\closed_attendance($formurl, $formoptions + ['confirmation' => false]);
+        $confirmation = new \mod_attendancejourneys\form\closed_attendance($formurl, $formoptions + ['confirmation' => true]);
+        if ($form->is_cancelled() || $confirmation->is_cancelled()) {
+            redirect($url);
+        }
+        $confirmed = $confirmation->get_data();
+        $data = $confirmed ?: $form->get_data();
+        $form->set_data($confirmed ?: (object) [
+            'status' => $record->status, 'minutesabsent' => $record->minutesabsent,
+        ]);
+        if ($data && empty($data->editproposal)) {
+            $minutes = match ($data->status) {
+                'absent' => (int) $session->duration,
+                'excused' => empty($attendancejourneys->journeygrading) ? 0 : (int) $session->duration,
+                'partial' => (int) $data->minutesabsent,
+                default => 0,
+            };
+            $reason = trim($data->reason);
+            $preview = \mod_attendancejourneys\local\closed_attendance::preview(
+                $attendancejourneys,
+                $closure,
+                $record,
+                $data->status,
+                $minutes,
+                $reason
+            );
+            if (!attendancejourneys_record_values_changed($record, $preview->record)) {
+                $blocker = ['closedcorrectionnochange', null];
+            } else {
+                $blocker = attendancejourneys_closure_blocker($preview->calculation);
+            }
+            if ($confirmed) {
+                if ($blocker || !hash_equals($preview->fingerprint, $confirmed->token ?? '')) {
+                    throw new moodle_exception('closedcorrectionstale', 'attendancejourneys', $formurl);
+                }
+                \mod_attendancejourneys\local\closed_attendance::commit(
+                    $attendancejourneys,
+                    $course,
+                    $cm,
+                    $closure,
+                    $record,
+                    $preview->record,
+                    $reason,
+                    $writelock
+                );
+                redirect(
+                    $url,
+                    get_string('closedcorrectionsaved', 'attendancejourneys'),
+                    null,
+                    \core\output\notification::NOTIFY_SUCCESS
+                );
+            }
+            $confirmation->set_data((object) [
+                'status' => $data->status, 'minutesabsent' => $minutes, 'reason' => $reason, 'token' => $preview->fingerprint,
+            ]);
+        }
+    }
+
+    echo $OUTPUT->header();
+    attendancejourneys_print_navigation($cm, $context, 'reports');
+    echo $OUTPUT->heading(get_string('closedcorrection', 'attendancejourneys'));
+    echo $OUTPUT->heading(s(fullname($participant)), 3);
+    echo html_writer::tag('p', format_string($session->name) . ' — ' . userdate($session->sessiondate));
+    echo html_writer::tag('p', get_string('closedcorrectioncurrent', 'attendancejourneys', (object) [
+        'status' => attendancejourneys_get_string('status' . $record->status, 'attendancejourneys'),
+        'minutes' => (int) $record->minutesabsent,
+    ]));
+    if ($protection !== null) {
+        echo $OUTPUT->notification(get_string($protection, 'attendancejourneys'), 'warning');
+        echo html_writer::link($url, get_string('backtoindividualreport', 'attendancejourneys'), ['class' => 'btn btn-secondary']);
+    } else if ($preview && !$blocker) {
+        if (!empty($attendancejourneys->percentageenabled)) {
+            echo html_writer::tag('p', get_string('closedcorrectionresult', 'attendancejourneys', (object) [
+                'before' => $closure->percentage === null ? '—' : format_float($closure->percentage, 1) . ' %',
+                'after' => $preview->calculation->percent === null ? '—' : format_float($preview->calculation->percent, 1) . ' %',
+            ]));
+        }
+        echo html_writer::tag('p', get_string('closedcorrectionproposed', 'attendancejourneys', (object) [
+            'status' => attendancejourneys_get_string('status' . $preview->record->status, 'attendancejourneys'),
+            'minutes' => (int) $preview->record->minutesabsent,
+        ]));
+        echo html_writer::tag('p', s($reason));
+        $confirmation->display();
+    } else {
+        if ($blocker) {
+            echo $OUTPUT->notification(attendancejourneys_get_string($blocker[0], 'attendancejourneys', $blocker[1]), 'warning');
+        }
+        $form->display();
+    }
+    echo $OUTPUT->footer();
+    exit;
 }
 if ($action === 'addequivalence') {
     require_capability('mod/attendancejourneys:managejourneys', $context);
@@ -1184,6 +1313,10 @@ $table->head = [
     attendancejourneys_get_string('attendanceenteredby', 'attendancejourneys'),
     attendancejourneys_get_string('attendancemodifiedon', 'attendancejourneys'),
 ];
+$cancorrect = !$closure && $canviewreports && $isvisibleparticipant &&
+    has_capability('mod/attendancejourneys:takeattendance', $context);
+$cancorrectclosed = $closure && $showjourneyclosure && $canviewreports && $isvisibleparticipant &&
+    has_capability('mod/attendancejourneys:correctclosedattendance', $context);
 $pagesessions = array_slice(array_values($detailsessions), $page * $perpage, $perpage);
 foreach ($pagesessions as $session) {
     $record = $records[$session->id] ?? null;
@@ -1275,8 +1408,32 @@ foreach ($pagesessions as $session) {
             'badge badge-secondary text-bg-secondary ml-1 ms-1'
         );
     }
+    $sessionname = html_writer::tag('strong', format_string($session->name)) .
+        html_writer::span($period, 'd-block text-muted small');
+    if (
+        $cancorrect && $record && empty($session->cancelled) &&
+            attendancejourneys_session_is_visible($cm, $context, $session)
+    ) {
+        $sessionname .= html_writer::div(html_writer::link(
+            new moodle_url('/mod/attendancejourneys/take.php', [
+                'id' => $cm->id, 'sessionid' => $session->id, 'participantid' => $userid,
+            ]),
+            get_string('correctattendance', 'attendancejourneys'),
+            ['aria-label' => get_string('correctattendancefor', 'attendancejourneys', format_string($session->name))]
+        ), 'mt-1');
+    } else if (
+        $cancorrectclosed && $record && isset($requiredsessions[$session->id]) &&
+            attendancejourneys_session_is_visible($cm, $context, $session) &&
+            \mod_attendancejourneys\local\closed_attendance::applies($attendancejourneys, $closure, $session, $record)
+    ) {
+        $sessionname .= html_writer::div(html_writer::link(
+            new moodle_url($url, ['action' => 'correctclosed', 'sessionid' => $session->id]),
+            get_string('closedcorrection', 'attendancejourneys'),
+            ['aria-label' => get_string('closedcorrectionfor', 'attendancejourneys', format_string($session->name))]
+        ), 'mt-1');
+    }
     $table->data[] = [
-        html_writer::tag('strong', format_string($session->name)) . html_writer::span($period, 'd-block text-muted small'),
+        $sessionname,
         attendancejourneys_get_string('minutesvalue', 'attendancejourneys', $session->duration),
         html_writer::span($status, 'attendancejourneys-detail-status'),
         $minutes,

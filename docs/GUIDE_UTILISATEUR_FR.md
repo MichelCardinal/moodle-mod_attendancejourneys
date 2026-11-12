@@ -91,6 +91,8 @@ Les actions « Tous… » accélèrent la saisie du formateur. Chaque participan
 
 Dans la feuille d’une session, utilisez les filtres et les actions de masse, puis traitez les exceptions participant par participant. Une feuille peut demeurer partiellement consignée.
 
+Après l’enregistrement, la confirmation s’affiche près du bouton **Enregistrer les présences** et indique si la feuille est complète.
+
 Les feuilles affichent au maximum 100 participants par page. Enregistrez avant de changer de page. Recherche, filtres et boutons de préparation des statuts concernent les lignes affichées de cette page. Le bouton d’approbation concerne toutes les déclarations de la page courante, y compris celles masquées par un filtre. Examinez la confirmation et recommencez sur les autres pages au besoin.
 
 ![Présence partielle avec 60 minutes absentes](images/fr/04-partial-attendance.jpg)
@@ -229,3 +231,7 @@ Pour un nouveau parcours qui couvre tout le cours, cochez **Suivre les inscripti
 Pour un parcours à liste manuelle, ouvrez **Parcours → votre parcours → Ajouter des participants** avant d’enregistrer les présences. Recherchez et sélectionnez plusieurs étudiants, puis enregistrez une seule fois. L’ajout s’applique aux séances déjà planifiées.
 
 Pour corriger la liste, cliquez sur **Retirer des participants** sous **Progression des participants**, sélectionnez les personnes à retirer et confirmez une seule fois. Cette action est disponible tant que le parcours manuel est ouvert et ne contient aucune présence ni aucun résultat final. Les personnes retirées restent inscrites au cours et conservent leurs groupes Moodle.
+
+Tant que le résultat est ouvert, ouvrez la fiche du participant dans **Rapports** et cliquez sur **Corriger la présence** à côté de la séance. Enregistrez le statut et les minutes d’absence pour revenir à la fiche actualisée.
+
+Pour un résultat définitif, une personne autorisée peut cliquer sur **Corriger après clôture** à côté de la séance. Saisissez la présence corrigée et le motif, vérifiez l’aperçu, puis confirmez. La correction figure dans l’historique des présences.

@@ -1,5 +1,13 @@
 # Historique des versions
 
+## 1.2.1
+
+Build 2026111202. Compatible avec Moodle 4.5 à 5.3.
+
+- Corriger une présence après clôture depuis le rapport individuel. Prévisualiser le résultat révisé, saisir le motif et confirmer la correction. L’historique consigne le changement et les protections du carnet Moodle s’appliquent.
+- Déléguer la correction après clôture au moyen d’une permission propre à l’activité. Accorder cette permission explicitement au personnel concerné.
+- Corriger une présence consignée avant clôture depuis le rapport individuel. La feuille de présence rapproche les filtres, l’avancement et les actions groupées, affiche les noms complets et confirme l’enregistrement près des boutons du formulaire.
+
 ## 1.2.0
 
 Build 2026111003. Compatible avec Moodle 4.5 à 5.3.

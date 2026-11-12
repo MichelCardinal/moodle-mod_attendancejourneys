@@ -56,6 +56,29 @@ if ($hassiteconfig && $ADMIN->fulltree) {
         get_string('adminoverview_desc', 'attendancejourneys') . '<br><br>' .
         get_string('adminlinks_desc', 'attendancejourneys') . '<br>' . implode(' · ', $links)
     ));
+    $rolecontext = context_system::instance();
+    $permissionlinks = [];
+    if (has_capability('moodle/role:manage', $rolecontext)) {
+        $permissionlinks[] = html_writer::link(new moodle_url('/admin/roles/manage.php'), get_string('defineroles', 'role'));
+    }
+    if (has_capability('moodle/role:review', $rolecontext)) {
+        $permissionlinks[] = html_writer::link(
+            new moodle_url('/admin/roles/check.php', ['contextid' => $rolecontext->id]),
+            get_string('checkpermissions', 'role')
+        );
+    }
+    $settings->add(new admin_setting_heading(
+        'mod_attendancejourneys/closurepermissions',
+        get_string('closurepermissions', 'attendancejourneys'),
+        html_writer::tag('p', get_string('closurepermissions_desc', 'attendancejourneys')) .
+        html_writer::alist(array_map(static fn($capability) => html_writer::tag(
+            'code',
+            'mod/attendancejourneys:' . $capability
+        ) . ' — ' . s(get_string('attendancejourneys:' . $capability, 'attendancejourneys')), [
+            'takeattendance', 'managejourneys', 'closejourneys', 'reopenjourneys', 'correctclosedattendance',
+        ])) .
+        ($permissionlinks ? html_writer::alist($permissionlinks) : '')
+    ));
     $legacysettings->add(new admin_setting_heading(
         'mod_attendancejourneys/legacyabsencepolicy',
         get_string('adminlegacy', 'attendancejourneys'),

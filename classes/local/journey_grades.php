@@ -180,14 +180,18 @@ final class journey_grades {
      *
      * @param \stdClass $activity Activity configuration.
      * @param int $userid Zero synchronises all current or historically graded participants.
+     * @param int|null $onlyjourneyid Limit publication to this root journey.
      * @return array Moodle update status indexed by journey identifier.
      */
-    public static function sync(\stdClass $activity, int $userid = 0): array {
+    public static function sync(\stdClass $activity, int $userid = 0, ?int $onlyjourneyid = null): array {
         global $DB;
         $items = self::items($activity);
         $enabled = !empty($activity->percentageenabled) && !empty($activity->gradeenabled);
         $statuses = [];
         foreach ($items as $journey) {
+            if ($onlyjourneyid !== null && (int) $journey->id !== $onlyjourneyid) {
+                continue;
+            }
             $grades = null;
             if ($enabled) {
                 $conditions = ['attendancejourneysid' => $activity->id, 'journeyid' => $journey->id];
@@ -238,24 +242,29 @@ final class journey_grades {
      * @param \stdClass $activity Activity configuration.
      * @param int $journeyid Journey in this activity.
      * @param array $userids Visible participant identifiers.
+     * @param bool $includelegacy Also check the single grade item in legacy mode.
      * @return array Protection message keys indexed by user identifier.
      */
-    public static function protections(\stdClass $activity, int $journeyid, array $userids): array {
+    public static function protections(\stdClass $activity, int $journeyid, array $userids, bool $includelegacy = false): array {
         global $CFG, $DB;
         if (
-            empty($activity->journeygrading) || empty($activity->gradeenabled) ||
+            (empty($activity->journeygrading) && !$includelegacy) || empty($activity->gradeenabled) ||
                 empty($activity->percentageenabled) || !$userids
         ) {
             return [];
         }
         require_once($CFG->libdir . '/gradelib.php');
-        $journey = attempt_family::root($activity, $journeyid);
-        if ($journey->gradeitemnumber === null) {
-            return [];
+        $itemnumber = 0;
+        if (!empty($activity->journeygrading)) {
+            $journey = attempt_family::root($activity, $journeyid);
+            if ($journey->gradeitemnumber === null) {
+                return [];
+            }
+            $itemnumber = $journey->gradeitemnumber;
         }
         $item = \grade_item::fetch([
             'courseid' => $activity->course, 'itemtype' => 'mod', 'itemmodule' => 'attendancejourneys',
-            'iteminstance' => $activity->id, 'itemnumber' => $journey->gradeitemnumber,
+            'iteminstance' => $activity->id, 'itemnumber' => $itemnumber,
         ]);
         if (!$item) {
             return [];

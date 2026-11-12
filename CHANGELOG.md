@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.1
+
+Build 2026111202. Supports Moodle 4.5–5.3.
+
+- Correct one attendance entry after closure from the individual report. Preview the revised result, record a reason, and confirm the correction. The history records the change and Moodle gradebook protections apply.
+- Delegate corrections after closure using a dedicated activity capability. Assign it explicitly to staff who need it.
+- Correct recorded attendance before closure from the individual report. The session sheet now groups its filters, progress and bulk actions, displays full names and confirms saves next to the form actions.
+
 ## 1.2.0
 
 Build 2026111003. Supports Moodle 4.5–5.3.

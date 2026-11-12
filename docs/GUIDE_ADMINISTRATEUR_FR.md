@@ -39,7 +39,7 @@ Les valeurs par défaut du calcul en pourcentage et du carnet sont enregistrées
 
 Les rôles Moodle peuvent autoriser séparément la clôture, la réouverture, l’ouverture d’une reprise personnelle et l’approbation ou la révocation d’équivalences. Chaque décision exige également la capacité existante de gestion des parcours; les restrictions de cours, de groupes et d’accès à l’activité demeurent applicables. La proposition d’équivalence reste distincte de son approbation.
 
-À la mise à niveau, Moodle copie vers chaque nouvelle capacité les permissions existantes de gestion des parcours, y compris les interdictions locales. Le personnel éditeur conserve ses droits jusqu’à leur adaptation explicite par l’administrateur. Vérifiez les deux capacités lors d’une délégation; masquer un bouton ne constitue pas à lui seul le contrôle d’accès.
+À la mise à niveau, Moodle copie vers les capacités de clôture, de réouverture, de nouvelle tentative et de décision d’équivalence les permissions existantes de gestion des parcours, y compris les interdictions locales. Le personnel éditeur conserve ses droits jusqu’à leur adaptation explicite par l’administrateur. Vérifiez les deux capacités lors d’une délégation; masquer un bouton ne constitue pas à lui seul le contrôle d’accès.
 
 ## Configuration institutionnelle
 
@@ -105,3 +105,7 @@ La confirmation ouvre une tentative personnelle distincte, avec le seuil de l’
 Une obligation conserve un seul élément de note et une seule exigence d’achèvement pour toutes ses tentatives. Les obligations indépendantes de théorie et de laboratoire gardent leurs seuils, notes et exigences propres. Le numéro d’affectation dans l’activité n’est pas le numéro personnel de tentative d’une obligation.
 
 La fiche individuelle d’une obligation unique ouvre directement sa tentative courante. Avec plusieurs obligations, choisissez leur tentative courante ou un lien d’historique. Les anciennes présences et clôtures restent consultables. Les rapports collectifs et exports Excel/PDF d’un parcours physique conservent les données du parcours demandé; **Résultat final précédent** ou **Tentative précédente** signifie que ce résultat ne détermine pas la note actuelle. Les exports par séance comportent une colonne **Statut du résultat de la tentative**, distincte du statut de présence comme Présent.
+
+La section **Permissions de clôture** des réglages du plugin indique les droits de saisie, de gestion des parcours, de clôture et de réouverture. Elle donne accès aux écrans natifs de définition des rôles et de vérification des permissions selon vos droits. Pour un réglage propre à une activité, utilisez **Plus → Permissions** dans l’activité.
+
+Attribuez explicitement la permission **Corriger les présences après clôture** au niveau du cours ou de l’activité. La personne déléguée doit aussi avoir accès au rapport du participant. Pour réserver la clôture et la réouverture ordinaires à l’équipe de validation, vérifiez les deux permissions existantes dans l’activité.

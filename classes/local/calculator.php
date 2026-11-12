@@ -247,13 +247,15 @@ final class calculator {
      * @param int $journeyid Journey identifier; zero denotes no specific journey.
      * @param bool $dueonly Whether to include only sessions that are due.
      * @param int|null $now Reference timestamp; null uses the current time.
+     * @param \stdClass|null $replacement Proposed attendance record for a read-only preview.
      */
     public static function calculate(
         \stdClass $activity,
         int $userid,
         int $journeyid = 0,
         bool $dueonly = false,
-        ?int $now = null
+        ?int $now = null,
+        ?\stdClass $replacement = null
     ): \stdClass {
         global $DB;
 
@@ -284,6 +286,9 @@ final class calculator {
             }
         }
 
+        if ($replacement !== null && isset($records[$replacement->sessionid]) && (int) $replacement->userid === $userid) {
+            $records[$replacement->sessionid] = $replacement;
+        }
         $result = self::aggregate($activity, $sessions, $records, $userid);
         $pendingconditions = [
             'attendancejourneysid' => $activity->id, 'userid' => $userid, 'status' => 'pending',

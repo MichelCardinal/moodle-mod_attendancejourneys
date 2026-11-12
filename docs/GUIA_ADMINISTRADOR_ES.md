@@ -39,7 +39,7 @@ Los valores predeterminados del cálculo porcentual y del libro de calificacione
 
 Los roles de Moodle pueden autorizar por separado el cierre, la reapertura, la apertura de nuevos intentos personales y la aprobación o revocación de equivalencias. Cada decisión exige también la capacidad existente de gestión de itinerarios; siguen aplicándose las restricciones del curso, de grupos y de acceso a la actividad. Proponer una equivalencia sigue siendo distinto de aprobarla.
 
-Al actualizar, Moodle copia a cada capacidad nueva los permisos existentes de gestión de itinerarios, incluidas las prohibiciones locales. El personal con permiso de edición conserva sus derechos hasta que el administrador adapte explícitamente el rol. Compruebe ambas capacidades al delegar una decisión; ocultar un botón no constituye por sí solo el control de acceso.
+Al actualizar, Moodle copia a las capacidades de cierre, reapertura, nuevo intento y decisión de equivalencias los permisos existentes de gestión de itinerarios, incluidas las prohibiciones locales. El personal con permiso de edición conserva sus derechos hasta que el administrador adapte explícitamente el rol. Compruebe ambas capacidades al delegar una decisión; ocultar un botón no constituye por sí solo el control de acceso.
 
 ## Configuración institucional
 
@@ -105,3 +105,7 @@ La confirmación abre un intento personal independiente con el umbral de la obli
 Una obligación conserva un solo elemento de calificación y un solo requisito de finalización para todos sus intentos. Las obligaciones independientes de teoría y laboratorio mantienen umbrales, calificaciones y requisitos propios. El número de asignación dentro de la actividad no es el número personal de intento de una obligación.
 
 El informe individual de una obligación única abre directamente su intento actual. Con varias obligaciones, elija el intento actual o un enlace al historial. La asistencia y los cierres anteriores siguen disponibles. Los informes colectivos y las exportaciones Excel/PDF de un itinerario físico conservan sus datos; **Resultado final anterior** o **Intento anterior** significa que este resultado no determina la calificación actual. Las exportaciones por sesión incluyen **Estado del resultado del intento**, separado del estado de asistencia como Presente.
+
+La sección **Permisos de cierre** de la configuración del plugin enumera los permisos para registrar la asistencia, gestionar itinerarios, cerrar resultados y reabrirlos. Incluye enlaces a las pantallas de roles y permisos de Moodle según sus permisos. Para modificar una sola actividad, abra **Más → Permisos** en esa actividad.
+
+Conceda explícitamente **Corregir la asistencia tras el cierre** en el curso o la actividad. La persona delegada también necesita acceso al informe del participante. Para reservar el cierre y la reapertura ordinarios al equipo de validación, revise ambos permisos en la actividad.

@@ -1,5 +1,13 @@
 # Registro de cambios
 
+## 1.2.1
+
+Compilación 2026111202. Compatible con Moodle 4.5–5.3.
+
+- Corregir una asistencia tras el cierre desde el informe individual. Previsualizar el resultado revisado, indicar el motivo y confirmar la corrección. El historial registra el cambio y se aplican las protecciones del libro de calificaciones de Moodle.
+- Delegar la corrección tras el cierre mediante un permiso específico de la actividad. Concederlo explícitamente al personal que lo necesite.
+- Corregir una asistencia registrada antes del cierre desde el informe individual. La hoja agrupa los filtros, el progreso y las acciones masivas, muestra los nombres completos y confirma el guardado junto a los botones del formulario.
+
 ## 1.2.0
 
 Compilación 2026111003. Compatible con Moodle 4.5–5.3.
